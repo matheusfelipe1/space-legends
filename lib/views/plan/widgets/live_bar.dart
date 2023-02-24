@@ -64,7 +64,7 @@ class _LiveBarState extends State<LiveBar> {
   }
 
   _listening() {
-    _controllerPlan.notificando.listen((event) {
+    _controllerPlan.notificaProgressos.stream.listen((event) {
       if (mounted) setState(() {});
       if (_controllerPlan.vidaAtual == 0) {
         showCupertinoModalPopup(

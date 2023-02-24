@@ -36,7 +36,7 @@ class _SpaceShipState extends State<SpaceShip> {
   }
 
   _listening() {
-    _controllerPlan.datas.listen((event) {
+    _controllerPlan.streamBody.stream.listen((event) {
       inclinacao = _controllerPlan.obj.transform.getRotation()[1];
       eixoX = inclinacao >= -0.4 && inclinacao <= 0.4
           ? 1.0

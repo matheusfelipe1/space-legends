@@ -15,9 +15,7 @@ class ControllerPlan {
   final Object obj =
       Object(fileName: 'assets/cube/Intergalactic_Spaceship-(Wavefront).obj');
   late StreamController<AccelerometerEvent> streamBody;
-  late Stream<AccelerometerEvent> datas;
   final StreamController<bool> notificaProgressos = StreamController<bool>.broadcast();
-  late Stream<bool> notificando;
 
   double progressoVida = 0.0;
   double progressoEscudo = 0.0;
@@ -33,9 +31,6 @@ class ControllerPlan {
 
   listening() {
     streamBody = StreamController<AccelerometerEvent>.broadcast();
-    if (!streamBody.isClosed) {
-      datas = streamBody.stream;
-    }
     accelerometerEvents.listen((event) {
       double eixoZ = (((event.y * pi) / 180) * .7);
       obj.transform
@@ -54,11 +49,9 @@ class ControllerPlan {
   removeListener() {
     streamBody.close();
     accelerometerEvents.listen((event) {}).cancel();
-    datas.listen((event) {}).cancel();
   }
 
   startGame(BuildContext context) {
-    notificando = notificaProgressos.stream;
     space.vida = [];
     space.escudo = [];
     for (var i = 0; i < Constants.maxVida; i++) {

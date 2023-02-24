@@ -49,7 +49,7 @@ class _LiveBarState extends State<LiveBar> {
                 border: Border.all(color: Colors.black, width: 2)),
           ),
           AnimatedContainer(
-            width: _controllerPlan.progressoPropulsao,
+            width: _controllerPlan.progressoEscudo,
             height: size.width * .01,
             duration: const Duration(milliseconds: 100),
             decoration: BoxDecoration(

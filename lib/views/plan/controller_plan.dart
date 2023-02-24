@@ -20,9 +20,9 @@ class ControllerPlan {
   late Stream<bool> notificando;
 
   double progressoVida = 0.0;
-  double progressoPropulsao = 0.0;
+  double progressoEscudo = 0.0;
   double qttDano = 0.0;
-  double qttPropulsao = 0.0;
+  double qttEscudo = 0.0;
 
   ControllerPlan() {
     obj.transform
@@ -60,18 +60,18 @@ class ControllerPlan {
   startGame(BuildContext context) {
     notificando = notificaProgressos.stream;
     space.vida = [];
-    space.propulsao = [];
-    for (var i = 0; i < Constants.maxLife; i++) {
+    space.escudo = [];
+    for (var i = 0; i < Constants.maxVida; i++) {
       space.vida!.add(i);
     }
-    for (var i = 0; i < Constants.maxPropulsao; i++) {
-      space.propulsao!.add(i);
+    for (var i = 0; i < Constants.maxEscudo; i++) {
+      space.escudo!.add(i);
     }
     final size = MediaQuery.of(context).size;
     qttDano = (size.width * .37) / space.vida!.length;
-    qttPropulsao = (size.width * .3) / space.propulsao!.length;
+    qttEscudo = (size.width * .3) / space.escudo!.length;
     progressoVida = size.width * .37;
-    progressoPropulsao = size.width * .3;
+    progressoEscudo = size.width * .3;
   }
 
   hitMe() {
@@ -92,17 +92,17 @@ class ControllerPlan {
   }
 
   avante() {
-    double verifica = progressoPropulsao;
-    if ((verifica -= qttPropulsao) <= 0.0) {
-      progressoPropulsao = 0.0;
-      space.propulsao!.clear();
+    double verifica = progressoEscudo;
+    if ((verifica -= qttEscudo) <= 0.0) {
+      progressoEscudo = 0.0;
+      space.escudo!.clear();
     } else {
-      progressoPropulsao -= qttPropulsao;
+      progressoEscudo -= qttEscudo;
     }
-    if (space.propulsao!.isNotEmpty) {
-      space.propulsao!.removeLast();
+    if (space.escudo!.isNotEmpty) {
+      space.escudo!.removeLast();
     } else {
-      progressoPropulsao = 0.0;
+      progressoEscudo = 0.0;
     }
     notificaProgressos.sink.add(true);
   }

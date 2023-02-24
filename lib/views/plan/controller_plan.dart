@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cube/flutter_cube.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:space_legends/shared/middleware/constants.dart';
-import 'package:space_legends/shared/models/show_data_spaceship.dart';
 import 'package:space_legends/shared/models/spaceship.dart';
 
 class ControllerPlan {
 
   final SpaceShipModel space = SpaceShipModel();
-  final ShowDataSpaceShip progressDataSpaceship = ShowDataSpaceShip();
   final Object obj =
       Object(fileName: 'assets/cube/Intergalactic_Spaceship-(Wavefront).obj');
   late StreamController<AccelerometerEvent> streamBody;

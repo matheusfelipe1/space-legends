@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:space_legends/shared/middleware/constants.dart';
+import 'package:space_legends/views/gameover/gameover.dart';
 
 import '../controller_plan.dart';
 
@@ -64,6 +66,21 @@ class _LiveBarState extends State<LiveBar> {
   _listening() {
     _controllerPlan.notificando.listen((event) {
       if (mounted) setState(() {});
+      if (_controllerPlan.vidaAtual == 0) {
+        showCupertinoModalPopup(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              final size = MediaQuery.of(context).size;
+              return AlertDialog(
+                backgroundColor: Colors.transparent.withOpacity(0.65),
+                content: SizedBox(
+                    width: size.width,
+                    height: size.height,
+                    child: const GameOverScreen()),
+              );
+            });
+      }
     });
   }
 }

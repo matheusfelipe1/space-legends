@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:space_legends/views/plan/controller_plan.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:space_legends/blocs/spaceship_bloc/spaceship_bloc.dart';
+import 'package:space_legends/views/plan/provider_controller.dart';
 import 'package:space_legends/views/plan/widgets/live_bar.dart';
 import 'package:space_legends/views/plan/widgets/spaceship.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,7 +15,7 @@ class PlaScreen extends StatefulWidget {
 }
 
 class _PlaScreenState extends State<PlaScreen> {
-  final controllerPlan = ControllerPlan();
+  final _spaceShipBloC = Modular.get<SpaceShipBloC>();
   @override
   void initState() {
     // TODO: implement initState
@@ -54,7 +56,6 @@ class _PlaScreenState extends State<PlaScreen> {
       // ignore: deprecated_member_use
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          controllerPlan.avante();
         },
         child: const Icon(
           FontAwesomeIcons.boltLightning,

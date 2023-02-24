@@ -14,11 +14,11 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     Future.delayed(const Duration(seconds: 4),
-        () => Modular.to.pushReplacementNamed('/default'));
+        () => Modular.to.pushReplacementNamed('/default/'));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return const Scaffold();
   }
 }

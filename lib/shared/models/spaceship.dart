@@ -1,3 +1,5 @@
+import 'package:flutter_cube/flutter_cube.dart';
+
 class SpaceShipModel {
   String? nome;
   List<int>? vida;
@@ -6,6 +8,8 @@ class SpaceShipModel {
   double? vidaAtual;
   double? escudoAtual;
   double? especialAtual;
+  double? qttDano;
+  Object? obj;
 
   SpaceShipModel(
       {this.nome,
@@ -14,5 +18,7 @@ class SpaceShipModel {
       this.vida,
       this.escudoAtual,
       this.especialAtual,
+      this.qttDano,
+      this.obj,
       this.vidaAtual});
 }

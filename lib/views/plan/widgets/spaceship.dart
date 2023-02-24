@@ -1,8 +1,9 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:space_legends/views/plan/controller_plan.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:space_legends/views/plan/widgets/cube.dart';
+
+import '../../../blocs/spaceship_bloc/spaceship_bloc.dart';
+import '../../../shared/models/orientation.dart';
 
 class SpaceShip extends StatefulWidget {
   const SpaceShip({Key? key}) : super(key: key);
@@ -12,45 +13,23 @@ class SpaceShip extends StatefulWidget {
 }
 
 class _SpaceShipState extends State<SpaceShip> {
-  final _controllerPlan = ControllerPlan();
-  double inclinacao = 0.0;
-  double deslocamento = 0.0;
-  double eixoY = 0.0;
-  double eixoX = 0.0;
+
+  final _blocSpaceShip = Modular.get<SpaceShipBloC>();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controllerPlan.listening();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      _listening();
-    });
   }
 
   @override
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
-    _controllerPlan.removeListener();
-  }
-
-  _listening() {
-    _controllerPlan.streamBody.stream.listen((event) {
-      inclinacao = _controllerPlan.obj.transform.getRotation()[1];
-      eixoX = inclinacao >= -0.4 && inclinacao <= 0.4
-          ? 1.0
-          : inclinacao >= 0.4
-              ? 200.0
-              : -200.0;
-      eixoY = event.x >= 5 ? 60 : -60;
-      if (mounted) setState(() {});
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Center(
       child: SizedBox(
         width: 600,
@@ -58,14 +37,25 @@ class _SpaceShipState extends State<SpaceShip> {
         child: SizedBox(
             height: 450,
             width: 450,
-            child: AnimatedContainer(
-              transform: Matrix4.identity()
-                ..setEntry(3, 2, 0.01)
-                ..translate(eixoX, eixoY),
-              duration: const Duration(milliseconds: 800),
-              curve: Curves.fastOutSlowIn,
-              child: const CubeWidget(),
-            )),
+            child: StreamBuilder<OrientationModel>(
+                stream: _blocSpaceShip.streamOrientation,
+                builder: (context, snapshot) {
+                  double inclinacao = snapshot.data == null ? 1.0 : snapshot.data!.horizontal!;
+                  double eixoX = inclinacao >= -0.4 && inclinacao <= 0.4
+                      ? 1.0
+                      : inclinacao >= 0.4
+                          ? 200.0
+                          : -200.0;
+                  double eixoY = snapshot.data == null ? 1.0 : snapshot.data!.vertical! >= 5 ? 60 : -60;
+                  return AnimatedContainer(
+                    transform: Matrix4.identity()
+                      ..setEntry(3, 2, 0.01)
+                      ..translate(eixoX, eixoY),
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.fastOutSlowIn,
+                    child: const CubeWidget(),
+                  );
+                })),
       ),
     );
   }

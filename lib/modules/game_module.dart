@@ -5,7 +5,7 @@ import 'package:space_legends/views/plan/plan_screen.dart';
 class GameModule extends Module {
   @override
   List<Bind> get binds => [
-    Bind.singleton((i) => SpaceShipBloC())
+    Bind.lazySingleton((i) => SpaceShipBloC())
   ];
 
   @override

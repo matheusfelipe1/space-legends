@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class GameOverScreen extends StatefulWidget {
   const GameOverScreen({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class _GameOverScreenState extends State<GameOverScreen> {
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
                      const Color.fromARGB(255, 201, 56, 45))),
-              onPressed: () {},
+              onPressed: () => Modular.to.pushReplacementNamed('/default/'),
               child: const Text('Try again',
                   style: TextStyle(color: Colors.white, fontSize: 19)))
         ],

@@ -2,6 +2,11 @@ import 'package:space_legends/shared/models/spaceship.dart';
 
 abstract class SpaceShipEvent {}
 
+class SpaceShipLoad extends SpaceShipEvent {
+  SpaceShipModel spaceShipModel;
+  SpaceShipLoad({required this.spaceShipModel});
+}
+
 class SpaceShipHitMe extends SpaceShipEvent {
   SpaceShipModel spaceShipModel;
   SpaceShipHitMe({required this.spaceShipModel});

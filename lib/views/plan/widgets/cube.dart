@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cube/flutter_cube.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:space_legends/blocs/spaceship_bloc/spaceship_bloc.dart';
 
-import '../controller_plan.dart';
+import '../provider_controller.dart';
 
 class CubeWidget extends StatefulWidget {
   const CubeWidget({Key? key})
@@ -13,11 +15,10 @@ class CubeWidget extends StatefulWidget {
 }
 
 class _CubeWidgetState extends State<CubeWidget> {
-  final _controllerPlan = ControllerPlan();
+  final _blocSpaceShip = Modular.get<SpaceShipBloC>();
   @override
   void initState() {
     // TODO: implement initState
-    _controllerPlan.listening();
     super.initState();
   }
 
@@ -25,7 +26,6 @@ class _CubeWidgetState extends State<CubeWidget> {
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
-    _controllerPlan.removeListener();
   }
 
   @override
@@ -34,7 +34,7 @@ class _CubeWidgetState extends State<CubeWidget> {
       key: UniqueKey(),
       interactive: false,
       onSceneCreated: (scene) {
-        scene.world.add(_controllerPlan.obj);
+        scene.world.add(_blocSpaceShip.space.obj!);
         scene.camera.zoom = 8;
       },
     );

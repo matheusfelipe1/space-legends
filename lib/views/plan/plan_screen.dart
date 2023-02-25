@@ -71,16 +71,31 @@ class _PlaScreenState extends State<PlaScreen> {
         ],
       ),
       // ignore: deprecated_member_use
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _spaceShipBloC.raisedShield();
-          setState(() {});
-        },
-        child: Icon(_spaceShipBloC.space.showShield!
-            ? Icons.cancel_outlined
-            : FontAwesomeIcons.shield),
-        backgroundColor:
-            _spaceShipBloC.space.showShield! ? Colors.red : Colors.blue,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: !read.objectCreated ? null : Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: '0',
+            onPressed: () {
+              _spaceShipBloC.raisedShield();
+              setState(() {});
+            },
+            child: Icon(_spaceShipBloC.space.showShield!
+                ? Icons.cancel_outlined
+                : FontAwesomeIcons.shield),
+            backgroundColor:
+                _spaceShipBloC.space.showShield! ? Colors.red : Colors.blue,
+          ),
+          const SizedBox(height: 15,),
+          FloatingActionButton(
+            heroTag: '1',
+            onPressed: () {
+            },
+            child: const Icon(FontAwesomeIcons.boltLightning),
+            backgroundColor: const Color.fromARGB(255, 217, 142, 4),
+          ),
+        ],
       ),
     );
   }

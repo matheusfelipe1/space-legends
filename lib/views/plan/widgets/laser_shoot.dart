@@ -57,8 +57,13 @@ class _LaseShootState extends State<LaseShoot> {
                         transform: Matrix4.identity()
                           ..setEntry(3, 2, 0.001)
                           ..translate(
-                              1.0, showShot ? widget.aimPosition * 3.5 : 50)
-                          ..rotateZ(widget.height == 60.0 ? 0.1 : 0.2),
+                              widget.height == -60.0 ? -0.1 : 1.0,
+                              showShot
+                                  ? widget.aimPosition * 3.5
+                                  : widget.height == -60.0
+                                      ? 30
+                                      : 50)
+                          ..rotateZ(0.1),
                         child: CustomPaint(
                           painter: MyPainter(widget.height),
                           size: const Size.fromRadius(0),
@@ -79,8 +84,13 @@ class _LaseShootState extends State<LaseShoot> {
                           transform: Matrix4.identity()
                             ..setEntry(3, 2, 0.001)
                             ..translate(
-                                1.0, showShot ? widget.aimPosition * 3.5 : 50)
-                            ..rotateZ(widget.height == 60.0 ? -0.1 : -0.25),
+                                1.0,
+                                showShot
+                                    ? widget.aimPosition * 3.5
+                                    : widget.height == -60.0
+                                        ? -5
+                                        : 50)
+                            ..rotateZ(-0.1),
                           child: CustomPaint(
                             painter: MyPainter(widget.height),
                             size: const Size.fromRadius(0),
@@ -104,20 +114,27 @@ class MyPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // TODO: implement paint
     Paint paint = Paint()
-      ..shader = const LinearGradient(
-        begin: Alignment(0, 0),
-        end: Alignment(5, 0),
-        colors: [
-          Colors.transparent,
-          Colors.red,
-          Colors.transparent,
-        ],
-      ).createShader(const Rect.fromLTWH(1, 0, 10, 1));
-    canvas.drawRect(
-        Rect.fromPoints(const Offset(0, 0), const Offset(50, 20)
-            // height == -60.0 ? (height * -1) * 1.5 : 200)
-            ),
-        paint);
+      ..shader = height == -60
+          ? const RadialGradient(colors: [
+              Colors.yellow,
+              Colors.transparent,
+            ]).createShader(Rect.fromCircle(center: const Offset(18, 5), radius: 18))
+          : const LinearGradient(
+              begin: Alignment(0, 0),
+              end: Alignment(5, 0),
+              colors: [
+                Colors.transparent,
+                Colors.red,
+                Colors.transparent,
+              ],
+            ).createShader(const Rect.fromLTWH(1, 0, 10, 1));
+    height == -60
+        ? canvas.drawCircle(const Offset(18, 5), 10, paint)
+        : canvas.drawRect(
+            Rect.fromPoints(const Offset(0, 0), const Offset(50, 20)
+                // height == -60.0 ? (height * -1) * 1.5 : 200)
+                ),
+            paint);
   }
 
   @override

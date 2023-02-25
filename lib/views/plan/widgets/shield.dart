@@ -17,7 +17,6 @@ class _ShieldState extends State<Shield> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: UniqueKey(),
       child: StreamBuilder<OrientationModel>(
           stream: _blocSpaceShip.streamOrientation,
           builder: (context, snapshot) {
@@ -40,6 +39,7 @@ class _ShieldState extends State<Shield> {
               duration: const Duration(milliseconds: 800),
               curve: Curves.fastOutSlowIn,
               child: CustomPaint(
+                key: UniqueKey(),
                 painter: MyPainter(),
                 size: const Size.fromRadius(34),
               ),

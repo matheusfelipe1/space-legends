@@ -81,7 +81,7 @@ class _PlaScreenState extends State<PlaScreen> {
                   heroTag: '0',
                   onPressed: () {
                     _spaceShipBloC.raisedShield();
-                    setState(() {});
+                    read.updateState();
                   },
                   child: Icon(_spaceShipBloC.space.showShield!
                       ? Icons.cancel_outlined

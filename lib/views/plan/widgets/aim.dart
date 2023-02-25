@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:provider/provider.dart';
 
 import '../../../blocs/spaceship_bloc/spaceship_bloc.dart';
 import '../../../shared/models/orientation.dart';

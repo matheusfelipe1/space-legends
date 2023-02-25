@@ -51,6 +51,7 @@ class SpaceShipBloC {
 
   _initialize() {
     SpaceShipModel space = SpaceShipModel();
+    audio.setSourceAsset('images/shot3.mp3');
     space.showShield = false;
     space.iShot = false;
     cachedOrientation.horizontal = 0.0;

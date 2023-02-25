@@ -9,12 +9,14 @@ class SpaceShipModel {
   double? escudoAtual;
   double? especialAtual;
   double? qttDano;
+  double? qttEscudo;
   Object? obj;
 
   SpaceShipModel(
       {this.nome,
       this.especial,
       this.escudo,
+      this.qttEscudo,
       this.vida,
       this.escudoAtual,
       this.especialAtual,

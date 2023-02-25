@@ -57,9 +57,9 @@ class SpaceShipBloC {
       space.escudo!.add(i);
     }
     space.qttDano = 250 / space.vida!.length;
-    space.escudoAtual = 250 / space.escudo!.length;
+    space.qttEscudo = 230 / space.escudo!.length;
     space.vidaAtual = 250;
-    space.escudoAtual = 250;
+    space.escudoAtual = 230;
     space.obj!.transform..setEntry(3, 2, 0.01)
       ..rotateX(-0.7);
     this.space = space;
@@ -100,5 +100,23 @@ class SpaceShipBloC {
       space.vidaAtual = 0.0;
     }
     _inputSpaceShipController.sink.add(SpaceShipHitMe(spaceShipModel: space));
+  }
+
+  raisedShield() {
+    double verifica = space.escudoAtual!;
+    if ((verifica -= space.qttEscudo!) <= 0.0) {
+      space.escudoAtual = 0.0;
+      space.escudo!.clear();
+    } else {
+      double escudo = space.escudoAtual!;
+      double carga = space.qttEscudo!;
+      space.escudoAtual = escudo - carga;
+    }
+    if (space.escudo!.isNotEmpty) {
+      space.escudo!.removeLast();
+    } else {
+      space.escudoAtual = 0.0;
+    }
+    _inputSpaceShipController.sink.add(SpaceShipRaiseShields(spaceShipModel: space));
   }
 }

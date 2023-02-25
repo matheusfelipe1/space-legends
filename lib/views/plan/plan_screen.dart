@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:provider/provider.dart';
 import 'package:space_legends/blocs/spaceship_bloc/spaceship_bloc.dart';
 import 'package:space_legends/views/plan/provider_controller.dart';
+import 'package:space_legends/views/plan/widgets/buffering_game.dart';
 import 'package:space_legends/views/plan/widgets/live_bar.dart';
 import 'package:space_legends/views/plan/widgets/spaceship.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -35,6 +37,7 @@ class _PlaScreenState extends State<PlaScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final read = Provider.of<ProviderController>(context);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       body: Stack(
@@ -50,13 +53,13 @@ class _PlaScreenState extends State<PlaScreen> {
           Positioned(
               top: size.width * .04,
               right: size.width * .04,
-              child: const LiveBar())
+              child: const LiveBar()),
+          if (!read.objectCreated) const BufferingGame()
         ],
       ),
       // ignore: deprecated_member_use
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-        },
+        onPressed: () {},
         child: const Icon(
           FontAwesomeIcons.boltLightning,
         ),

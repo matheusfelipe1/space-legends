@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cube/flutter_cube.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:provider/provider.dart';
 import 'package:space_legends/blocs/spaceship_bloc/spaceship_bloc.dart';
 
 import '../provider_controller.dart';
@@ -30,12 +31,16 @@ class _CubeWidgetState extends State<CubeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final read = Provider.of<ProviderController>(context, listen: false);
     return Cube(
       key: UniqueKey(),
       interactive: false,
       onSceneCreated: (scene) {
         scene.world.add(_blocSpaceShip.space.obj!);
         scene.camera.zoom = 8;
+      },
+      onObjectCreated: (_) {
+        read.buildCreate();
       },
     );
   }

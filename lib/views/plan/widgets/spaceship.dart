@@ -5,6 +5,7 @@ import 'package:space_legends/views/plan/widgets/shield.dart';
 
 import '../../../blocs/spaceship_bloc/spaceship_bloc.dart';
 import '../../../shared/models/orientation.dart';
+import 'aim.dart';
 
 class SpaceShip extends StatefulWidget {
   bool showShield;
@@ -35,6 +36,8 @@ class _SpaceShipState extends State<SpaceShip> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          if (!widget.showShield)
+          const Aim(),
           if (widget.showShield)
           const Shield(),
           SizedBox(

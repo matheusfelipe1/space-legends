@@ -41,12 +41,12 @@ class _SpaceShipState extends State<SpaceShip> {
                 stream: _blocSpaceShip.streamOrientation,
                 builder: (context, snapshot) {
                   double inclinacao = snapshot.data == null ? 1.0 : snapshot.data!.horizontal!;
-                  double eixoX = inclinacao >= -0.4 && inclinacao <= 0.4
+                  double eixoX = inclinacao >= -0.2 && inclinacao <= 0.2
                       ? 1.0
-                      : inclinacao >= 0.4
+                      : inclinacao > 0.2
                           ? 200.0
                           : -200.0;
-                  double eixoY = snapshot.data == null ? 1.0 : snapshot.data!.vertical! >= 5 ? 60 : -60;
+                  double eixoY = snapshot.data == null ? 1.0 : snapshot.data!.vertical! >= 0.1 ? 60 : -60;
                   return AnimatedContainer(
                     transform: Matrix4.identity()
                       ..setEntry(3, 2, 0.01)

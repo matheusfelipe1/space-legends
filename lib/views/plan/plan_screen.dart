@@ -54,6 +54,16 @@ class _PlaScreenState extends State<PlaScreen> {
               top: size.width * .04,
               right: size.width * .04,
               child: const LiveBar()),
+          Positioned(
+              top: 0,
+              right: 0,
+              child: SizedBox(
+                height: size.width * .7,
+                width: size.width,
+                child: GestureDetector(
+                    onPanUpdate: (details) =>
+                        _spaceShipBloC.moveUpOrDown(details.delta.dy)),
+              )),
           if (!read.objectCreated) const BufferingGame()
         ],
       ),

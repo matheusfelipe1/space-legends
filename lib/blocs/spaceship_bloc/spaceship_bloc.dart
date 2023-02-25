@@ -11,6 +11,7 @@ import '../../shared/middleware/constants.dart';
 
 class SpaceShipBloC {
   SpaceShipModel space = SpaceShipModel();
+  final OrientationModel cachedOrientation = OrientationModel();
   final StreamController<SpaceShipEvent> _inputSpaceShipController =
       StreamController<SpaceShipEvent>();
   final StreamController<SpaceShipModel> _outputSpaceShipController =
@@ -47,6 +48,10 @@ class SpaceShipBloC {
 
   _initialize() {
     SpaceShipModel space = SpaceShipModel();
+    cachedOrientation.horizontal = 0.0;
+    cachedOrientation.horizontalCached = 0.0;
+    cachedOrientation.vertical = 0.0;
+    cachedOrientation.verticalCached = 0.0;
     space.obj = Object(fileName: 'assets/cube/Intergalactic_Spaceship-(Wavefront).obj');
     space.vida = [];
     space.escudo = [];
@@ -78,8 +83,9 @@ class SpaceShipBloC {
       space.obj!.rotation.setZero();
       space.obj!.rotation.setValues(0.0, 0.0, eixoZ);
       OrientationModel orientationModel = OrientationModel();
-      orientationModel.horizontal = space.obj!.transform.getRotation()[1];
-      orientationModel.vertical = event.x;
+      cachedOrientation.horizontalCached = space.obj!.transform.getRotation()[1];
+      cachedOrientation.horizontal = space.obj!.transform.getRotation()[1];
+      orientationModel = cachedOrientation;
       _streamOrientation.sink.add(orientationModel);
     });
   }
@@ -118,5 +124,13 @@ class SpaceShipBloC {
       space.escudoAtual = 0.0;
     }
     _inputSpaceShipController.sink.add(SpaceShipRaiseShields(spaceShipModel: space));
+  }
+
+  moveUpOrDown(double y) {
+    OrientationModel orientationModel = OrientationModel();
+    cachedOrientation.vertical = y;
+    cachedOrientation.verticalCached = y;
+    orientationModel = cachedOrientation;
+    _streamOrientation.sink.add(orientationModel);
   }
 }

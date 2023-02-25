@@ -16,4 +16,10 @@ class ProviderController with ChangeNotifier {
     objectCreated = false;
     notifyListeners();
   }
+
+  updateState() {
+    Future.delayed(const Duration(seconds: 1), () {
+        notifyListeners();
+      });
+  }
 }

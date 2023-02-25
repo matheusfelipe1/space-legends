@@ -16,7 +16,8 @@ class SpaceShipBloC {
       StreamController<SpaceShipEvent>();
   final StreamController<SpaceShipModel> _outputSpaceShipController =
       StreamController<SpaceShipModel>();
-  final StreamController<OrientationModel> _streamOrientation = StreamController<OrientationModel>();
+  final StreamController<OrientationModel> _streamOrientation =
+      StreamController<OrientationModel>.broadcast();
 
   Sink<SpaceShipEvent> get inputSpaceship => _inputSpaceShipController.sink;
   Stream<SpaceShipModel> get stream => _outputSpaceShipController.stream;
@@ -48,11 +49,13 @@ class SpaceShipBloC {
 
   _initialize() {
     SpaceShipModel space = SpaceShipModel();
+    space.showShield = false;
     cachedOrientation.horizontal = 0.0;
     cachedOrientation.horizontalCached = 0.0;
     cachedOrientation.vertical = 0.0;
     cachedOrientation.verticalCached = 0.0;
-    space.obj = Object(fileName: 'assets/cube/Intergalactic_Spaceship-(Wavefront).obj');
+    space.obj =
+        Object(fileName: 'assets/cube/Intergalactic_Spaceship-(Wavefront).obj');
     space.vida = [];
     space.escudo = [];
     for (var i = 0; i < Constants.maxVida; i++) {
@@ -65,7 +68,8 @@ class SpaceShipBloC {
     space.qttEscudo = 230 / space.escudo!.length;
     space.vidaAtual = 250;
     space.escudoAtual = 230;
-    space.obj!.transform..setEntry(3, 2, 0.01)
+    space.obj!.transform
+      ..setEntry(3, 2, 0.01)
       ..rotateX(-0.7);
     this.space = space;
     SpaceShipLoad valueToAdd = SpaceShipLoad(spaceShipModel: space);
@@ -83,7 +87,8 @@ class SpaceShipBloC {
       space.obj!.rotation.setZero();
       space.obj!.rotation.setValues(0.0, 0.0, eixoZ);
       OrientationModel orientationModel = OrientationModel();
-      cachedOrientation.horizontalCached = space.obj!.transform.getRotation()[1];
+      cachedOrientation.horizontalCached =
+          space.obj!.transform.getRotation()[1];
       cachedOrientation.horizontal = space.obj!.transform.getRotation()[1];
       orientationModel = cachedOrientation;
       _streamOrientation.sink.add(orientationModel);
@@ -109,21 +114,25 @@ class SpaceShipBloC {
   }
 
   raisedShield() {
-    double verifica = space.escudoAtual!;
-    if ((verifica -= space.qttEscudo!) <= 0.0) {
-      space.escudoAtual = 0.0;
-      space.escudo!.clear();
-    } else {
-      double escudo = space.escudoAtual!;
-      double carga = space.qttEscudo!;
-      space.escudoAtual = escudo - carga;
+    if (!space.showShield!) {
+      double verifica = space.escudoAtual!;
+      if ((verifica -= space.qttEscudo!) <= 0.0) {
+        space.escudoAtual = 0.0;
+        space.escudo!.clear();
+      } else {
+        double escudo = space.escudoAtual!;
+        double carga = space.qttEscudo!;
+        space.escudoAtual = escudo - carga;
+      }
+      if (space.escudo!.isNotEmpty) {
+        space.escudo!.removeLast();
+      } else {
+        space.escudoAtual = 0.0;
+      }
     }
-    if (space.escudo!.isNotEmpty) {
-      space.escudo!.removeLast();
-    } else {
-      space.escudoAtual = 0.0;
-    }
-    _inputSpaceShipController.sink.add(SpaceShipRaiseShields(spaceShipModel: space));
+    space.showShield = !space.showShield!;
+    _inputSpaceShipController.sink
+        .add(SpaceShipRaiseShields(spaceShipModel: space));
   }
 
   moveUpOrDown(double y) {
@@ -133,4 +142,6 @@ class SpaceShipBloC {
     orientationModel = cachedOrientation;
     _streamOrientation.sink.add(orientationModel);
   }
+
+  int get saudeEscudo => space.escudo!.length;
 }

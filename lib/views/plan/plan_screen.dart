@@ -49,7 +49,10 @@ class _PlaScreenState extends State<PlaScreen> {
                 'assets/images/gif.gif',
                 fit: BoxFit.cover,
               )),
-          const SpaceShip(),
+          SpaceShip(
+            showShield: _spaceShipBloC.saudeEscudo > 0 &&
+                _spaceShipBloC.space.showShield! == true,
+          ),
           Positioned(
               top: size.width * .04,
               right: size.width * .04,
@@ -69,11 +72,15 @@ class _PlaScreenState extends State<PlaScreen> {
       ),
       // ignore: deprecated_member_use
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(
-          FontAwesomeIcons.boltLightning,
-        ),
-        backgroundColor: const Color.fromARGB(255, 231, 161, 39),
+        onPressed: () {
+          _spaceShipBloC.raisedShield();
+          setState(() {});
+        },
+        child: Icon(_spaceShipBloC.space.showShield!
+            ? Icons.cancel_outlined
+            : FontAwesomeIcons.shield),
+        backgroundColor:
+            _spaceShipBloC.space.showShield! ? Colors.red : Colors.blue,
       ),
     );
   }

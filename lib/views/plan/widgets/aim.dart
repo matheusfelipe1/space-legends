@@ -18,8 +18,10 @@ class _AimState extends State<Aim> {
   final _blocSpaceShip = Modular.get<SpaceShipBloC>();
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
       key: UniqueKey(),
+      margin: EdgeInsets.only(left: size.width * .0158),
       child: StreamBuilder<OrientationModel>(
           stream: _blocSpaceShip.streamOrientation,
           builder: (context, snapshot) {

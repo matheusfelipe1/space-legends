@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:space_legends/views/plan/widgets/cube.dart';
+import 'package:space_legends/views/plan/widgets/laser_shoot.dart';
 import 'package:space_legends/views/plan/widgets/shield.dart';
 
 import '../../../blocs/spaceship_bloc/spaceship_bloc.dart';
@@ -36,10 +37,8 @@ class _SpaceShipState extends State<SpaceShip> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (!widget.showShield)
-          const Aim(),
-          if (widget.showShield)
-          const Shield(),
+          if (!widget.showShield) const Aim(),
+          if (widget.showShield) const Shield(),
           SizedBox(
             width: 600,
             height: 200,
@@ -49,8 +48,9 @@ class _SpaceShipState extends State<SpaceShip> {
               child: StreamBuilder<OrientationModel>(
                   stream: _blocSpaceShip.streamOrientation,
                   builder: (context, snapshot) {
-                    double inclinacao =
-                        snapshot.data == null ? 1.0 : snapshot.data!.horizontal!;
+                    double inclinacao = snapshot.data == null
+                        ? 1.0
+                        : snapshot.data!.horizontal!;
                     double eixoX = inclinacao >= -0.2 && inclinacao <= 0.2
                         ? 1.0
                         : inclinacao > 0.2
@@ -69,7 +69,18 @@ class _SpaceShipState extends State<SpaceShip> {
                         ..translate(eixoX, eixoY),
                       duration: const Duration(milliseconds: 800),
                       curve: Curves.fastOutSlowIn,
-                      child: const CubeWidget(),
+                      child: Stack(
+                        children: [
+                          const CubeWidget(),
+                          Positioned(
+                            top: 0,
+                            child: LaseShoot(
+                              eixoX: eixoX,
+                              height: eixoY,
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   }),
             ),

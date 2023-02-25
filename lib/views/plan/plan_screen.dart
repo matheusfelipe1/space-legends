@@ -42,13 +42,13 @@ class _PlaScreenState extends State<PlaScreen> {
       backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       body: Stack(
         children: [
-          SizedBox(
-              height: size.height,
-              width: size.width,
-              child: Image.asset(
-                'assets/images/gif.gif',
-                fit: BoxFit.cover,
-              )),
+          // SizedBox(
+          //     height: size.height,
+          //     width: size.width,
+          //     child: Image.asset(
+          //       'assets/images/gif.gif',
+          //       fit: BoxFit.cover,
+          //     )),
           SpaceShip(
             showShield: _spaceShipBloC.saudeEscudo > 0 &&
                 _spaceShipBloC.space.showShield! == true,
@@ -72,31 +72,43 @@ class _PlaScreenState extends State<PlaScreen> {
       ),
       // ignore: deprecated_member_use
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: !read.objectCreated ? null : Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: '0',
-            onPressed: () {
-              _spaceShipBloC.raisedShield();
-              setState(() {});
-            },
-            child: Icon(_spaceShipBloC.space.showShield!
-                ? Icons.cancel_outlined
-                : FontAwesomeIcons.shield),
-            backgroundColor:
-                _spaceShipBloC.space.showShield! ? Colors.red : Colors.blue,
-          ),
-          const SizedBox(height: 15,),
-          FloatingActionButton(
-            heroTag: '1',
-            onPressed: () {
-            },
-            child: const Icon(FontAwesomeIcons.boltLightning),
-            backgroundColor: const Color.fromARGB(255, 217, 142, 4),
-          ),
-        ],
-      ),
+      floatingActionButton: !read.objectCreated
+          ? null
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  heroTag: '0',
+                  onPressed: () {
+                    _spaceShipBloC.raisedShield();
+                    setState(() {});
+                  },
+                  child: Icon(_spaceShipBloC.space.showShield!
+                      ? Icons.cancel_outlined
+                      : FontAwesomeIcons.shield),
+                  backgroundColor: _spaceShipBloC.space.showShield!
+                      ? Colors.red
+                      : Colors.blue,
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                GestureDetector(
+                  onTapDown: (details) => _spaceShipBloC.startShot(),
+                  onTapUp: (details) => _spaceShipBloC.stopShot(),
+                  child: Container(
+                    width: 55,
+                    height: 55,
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 217, 142, 4),
+                        borderRadius: BorderRadius.circular(30)),
+                    child: const Center(
+                        child: Icon(FontAwesomeIcons.boltLightning,
+                            color: Colors.white)),
+                  ),
+                )
+              ],
+            ),
     );
   }
 }

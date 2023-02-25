@@ -12,6 +12,7 @@ class SpaceShipModel {
   double? qttEscudo;
   Object? obj;
   bool? showShield;
+  bool? iShot;
 
   SpaceShipModel(
       {this.nome,
@@ -23,6 +24,7 @@ class SpaceShipModel {
       this.especialAtual,
       this.qttDano,
       this.obj,
+      this.iShot,
       this.showShield,
       this.vidaAtual});
 }

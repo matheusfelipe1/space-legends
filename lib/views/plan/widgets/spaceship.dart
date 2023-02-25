@@ -43,8 +43,8 @@ class _SpaceShipState extends State<SpaceShip> {
             width: 600,
             height: 200,
             child: SizedBox(
-              width: 450,
-              height: 450,
+              width: 200,
+              height: 200,
               child: StreamBuilder<OrientationModel>(
                   stream: _blocSpaceShip.streamOrientation,
                   builder: (context, snapshot) {
@@ -72,13 +72,15 @@ class _SpaceShipState extends State<SpaceShip> {
                       child: Stack(
                         children: [
                           const CubeWidget(),
-                          Positioned(
-                            top: 0,
-                            child: LaseShoot(
-                              eixoX: eixoX,
-                              height: eixoY,
+                          if (!widget.showShield)
+                            Positioned(
+                              top: 0,
+                              child: LaseShoot(
+                                eixoX: eixoX,
+                                height: eixoY,
+                                aimPosition: -35,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     );

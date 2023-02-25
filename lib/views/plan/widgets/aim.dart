@@ -1,8 +1,7 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../../../blocs/spaceship_bloc/spaceship_bloc.dart';
 import '../../../shared/models/orientation.dart';
@@ -16,12 +15,13 @@ class Aim extends StatefulWidget {
 
 class _AimState extends State<Aim> {
   final _blocSpaceShip = Modular.get<SpaceShipBloC>();
+  final GlobalKey _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
       key: UniqueKey(),
-      margin: EdgeInsets.only(left: size.width * .0158),
+      margin: EdgeInsets.only(right: size.width * .006),
       child: StreamBuilder<OrientationModel>(
           stream: _blocSpaceShip.streamOrientation,
           builder: (context, snapshot) {
@@ -32,11 +32,6 @@ class _AimState extends State<Aim> {
                 : inclinacao > 0.2
                     ? 200.0
                     : -200.0;
-            // double eixoY = snapshot.data == null
-            //     ? 1.0
-            //     : snapshot.data!.vertical! >= 0.1
-            //         ? 60
-            //         : -60;
             return AnimatedContainer(
               transform: Matrix4.identity()
                 ..setEntry(3, 2, 0.01)
@@ -46,6 +41,7 @@ class _AimState extends State<Aim> {
               width: 20,
               height: 20,
               child: CustomPaint(
+                key: _key,
                 painter: MyPainter(),
                 size: const Size.fromRadius(0),
               ),
@@ -53,6 +49,7 @@ class _AimState extends State<Aim> {
           }),
     );
   }
+
 }
 
 class MyPainter extends CustomPainter {

@@ -12,7 +12,7 @@ class AppWidget extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProviderController(),)
       ],
       child: MaterialApp.router(
-        showSemanticsDebugger: false,
+        debugShowCheckedModeBanner: false,
         title: 'My Smart App',
         theme: ThemeData(primarySwatch: Colors.blue),
         routeInformationParser: Modular.routeInformationParser,

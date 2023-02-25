@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cube/flutter_cube.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:space_legends/shared/models/spaceship.dart';
+
+import '../../../blocs/spaceship_bloc/spaceship_bloc.dart';
 
 class LaseShoot extends StatefulWidget {
   double eixoX;
   double height;
-  LaseShoot({Key? key, required this.eixoX, required this.height})
+  double aimPosition;
+  LaseShoot(
+      {Key? key,
+      required this.eixoX,
+      required this.height,
+      required this.aimPosition})
       : super(key: key);
 
   @override
@@ -12,51 +20,80 @@ class LaseShoot extends StatefulWidget {
 }
 
 class _LaseShootState extends State<LaseShoot> {
+  final _blocSpaceShip = Modular.get<SpaceShipBloC>();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Container(
-      key: UniqueKey(),
-      margin: EdgeInsets.only(left: size.width * .0155),
-      child: Center(
-        child: Transform(
-          transform: Matrix4.identity()
-            ..setEntry(3, 2, 0.001)
-            ..translate(
-                widget.eixoX == 1.0
-                    ? (widget.eixoX * 270.0)
-                    : widget.eixoX == 200.0
-                        ? widget.eixoX * 1.35
-                        : widget.eixoX * -1.34,
-                widget.height == 60.0 ? -120 : 0),
-          child: Row(
-            children: [
-              Transform(
-                transform: Matrix4.identity()
-                  ..setEntry(3, 2, 0.001)
-                  ..rotateZ(widget.height == 60.0 ? 0.1: 0.2),
-                child: CustomPaint(
-                  painter: MyPainter(widget.height),
-                  size: const Size.fromRadius(0),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: size.width * .015),
-                child: Transform(
+    return StreamBuilder<SpaceShipModel>(
+        stream: _blocSpaceShip.stream,
+        builder: (context, snapshot) {
+          bool showShot = snapshot.data == null ? false : snapshot.data!.iShot!;
+          return AnimatedOpacity(
+            opacity: showShot ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 700),
+            child: Container(
+              key: UniqueKey(),
+              margin: EdgeInsets.only(right: size.width * .0169),
+              child: Center(
+                key: UniqueKey(),
+                child: AnimatedContainer(
+                  key: UniqueKey(),
+                  duration: const Duration(milliseconds: 100),
                   transform: Matrix4.identity()
                     ..setEntry(3, 2, 0.001)
-                    ..rotateZ(widget.height == 60.0 ? -0.1 : -0.25),
-                  child: CustomPaint(
-                    painter: MyPainter(widget.height),
-                    size: const Size.fromRadius(0),
+                    ..translate(
+                        widget.eixoX == 1.0
+                            ? (widget.eixoX * 270.0)
+                            : widget.eixoX == 200.0
+                                ? widget.eixoX * 1.35
+                                : widget.eixoX * -1.34,
+                        0.0),
+                  child: Row(
+                    key: UniqueKey(),
+                    children: [
+                      AnimatedContainer(
+                        key: UniqueKey(),
+                        duration: const Duration(milliseconds: 500),
+                        transform: Matrix4.identity()
+                          ..setEntry(3, 2, 0.001)
+                          ..translate(
+                              1.0, showShot ? widget.aimPosition * 3.5 : 50)
+                          ..rotateZ(widget.height == 60.0 ? 0.1 : 0.2),
+                        child: CustomPaint(
+                          painter: MyPainter(widget.height),
+                          size: const Size.fromRadius(0),
+                        ),
+                      ),
+                      AnimatedContainer(
+                          duration: const Duration(milliseconds: 500),
+                          width: !showShot
+                              ? widget.height != 60.0
+                                  ? 0
+                                  : 30
+                              : 0),
+                      Container(
+                        margin: EdgeInsets.only(top: size.width * .010),
+                        child: AnimatedContainer(
+                          key: UniqueKey(),
+                          duration: const Duration(milliseconds: 500),
+                          transform: Matrix4.identity()
+                            ..setEntry(3, 2, 0.001)
+                            ..translate(
+                                1.0, showShot ? widget.aimPosition * 3.5 : 50)
+                            ..rotateZ(widget.height == 60.0 ? -0.1 : -0.25),
+                          child: CustomPaint(
+                            painter: MyPainter(widget.height),
+                            size: const Size.fromRadius(0),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
+        });
   }
 }
 
@@ -77,7 +114,10 @@ class MyPainter extends CustomPainter {
         ],
       ).createShader(const Rect.fromLTWH(1, 0, 10, 1));
     canvas.drawRect(
-        Rect.fromPoints(const Offset(0, 0), Offset(50, height == -60.0 ? (height * -1) * 1.5 : 200)), paint);
+        Rect.fromPoints(const Offset(0, 0), const Offset(50, 20)
+            // height == -60.0 ? (height * -1) * 1.5 : 200)
+            ),
+        paint);
   }
 
   @override

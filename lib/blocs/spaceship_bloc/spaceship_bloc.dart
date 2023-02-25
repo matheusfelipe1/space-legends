@@ -1,21 +1,23 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cube/flutter_cube.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:space_legends/blocs/spaceship_bloc/spaceship_event.dart';
 import 'package:space_legends/shared/models/orientation.dart';
 import 'package:space_legends/shared/models/spaceship.dart';
-
 import '../../shared/middleware/constants.dart';
 
 class SpaceShipBloC {
   SpaceShipModel space = SpaceShipModel();
+  final  AudioPlayer audio = AudioPlayer();
   final OrientationModel cachedOrientation = OrientationModel();
   final StreamController<SpaceShipEvent> _inputSpaceShipController =
       StreamController<SpaceShipEvent>();
   final StreamController<SpaceShipModel> _outputSpaceShipController =
-      StreamController<SpaceShipModel>();
+      StreamController<SpaceShipModel>.broadcast();
   final StreamController<OrientationModel> _streamOrientation =
       StreamController<OrientationModel>.broadcast();
 
@@ -50,6 +52,7 @@ class SpaceShipBloC {
   _initialize() {
     SpaceShipModel space = SpaceShipModel();
     space.showShield = false;
+    space.iShot = false;
     cachedOrientation.horizontal = 0.0;
     cachedOrientation.horizontalCached = 0.0;
     cachedOrientation.vertical = 0.0;
@@ -144,4 +147,20 @@ class SpaceShipBloC {
   }
 
   int get saudeEscudo => space.escudo!.length;
+
+  startShot() async {
+    space.iShot = true;
+    _inputSpaceShipController.sink.add(SpaceShipIShot(spaceShipModel: space));
+    HapticFeedback.vibrate();
+    _showSound();
+  }
+
+  _showSound() {
+    audio.play(AssetSource('images/shot3.mp3'));
+  }
+
+  stopShot() {
+    space.iShot = false;
+    _inputSpaceShipController.sink.add(SpaceShipIShot(spaceShipModel: space));
+  }
 }

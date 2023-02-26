@@ -19,9 +19,6 @@ class _LiveBarState extends State<LiveBar> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      if (mounted) setState(() {});
-    });
   }
 
   @override

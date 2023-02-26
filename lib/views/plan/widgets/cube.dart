@@ -2,10 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cube/flutter_cube.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:provider/provider.dart';
 import 'package:space_legends/blocs/spaceship_bloc/spaceship_bloc.dart';
 
-import '../provider_controller.dart';
 
 class CubeWidget extends StatefulWidget {
   const CubeWidget({Key? key})
@@ -21,6 +19,10 @@ class _CubeWidgetState extends State<CubeWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _blocSpaceShip.space.obj = Object(fileName: 'assets/cube/Intergalactic_Spaceship-(Wavefront).obj');
+    _blocSpaceShip.space.obj!.transform
+      ..setEntry(3, 2, 0.01)
+      ..rotateX(-0.7);
   }
 
   @override
@@ -31,7 +33,6 @@ class _CubeWidgetState extends State<CubeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final read = Provider.of<ProviderController>(context, listen: false);
     return Cube(
       key: UniqueKey(),
       interactive: false,

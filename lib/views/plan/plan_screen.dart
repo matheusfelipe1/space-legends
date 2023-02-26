@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:space_legends/blocs/spaceship_bloc/spaceship_bloc.dart';
 import 'package:space_legends/views/plan/provider_controller.dart';
 import 'package:space_legends/views/plan/widgets/buffering_game.dart';
+import 'package:space_legends/views/plan/widgets/enimies.dart';
 import 'package:space_legends/views/plan/widgets/generate_stars.dart';
 import 'package:space_legends/views/plan/widgets/live_bar.dart';
 import 'package:space_legends/views/plan/widgets/spaceship.dart';
@@ -65,6 +66,13 @@ class _PlaScreenState extends State<PlaScreen> {
                         _spaceShipBloC.moveUpOrDown(details.delta.dy)),
               )),
           // if (!read.objectCreated) const BufferingGame(),
+          Positioned(
+            top: 10,
+            right: 0,
+            child: SizedBox(
+              width: 150,
+              height: 150,
+              child: Enimies()))
         ],
       ),
       // ignore: deprecated_member_use

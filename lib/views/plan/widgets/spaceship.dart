@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:space_legends/shared/models/spaceship.dart';
 import 'package:space_legends/views/plan/widgets/cube.dart';
 import 'package:space_legends/views/plan/widgets/laser_shoot.dart';
 import 'package:space_legends/views/plan/widgets/shield.dart';
@@ -9,8 +10,7 @@ import '../../../shared/models/orientation.dart';
 import 'aim.dart';
 
 class SpaceShip extends StatefulWidget {
-  bool showShield;
-  SpaceShip({Key? key, required this.showShield}) : super(key: key);
+  const SpaceShip({Key? key}) : super(key: key);
 
   @override
   State<SpaceShip> createState() => _SpaceShipState();
@@ -18,6 +18,7 @@ class SpaceShip extends StatefulWidget {
 
 class _SpaceShipState extends State<SpaceShip> {
   final _blocSpaceShip = Modular.get<SpaceShipBloC>();
+  bool showShield = false;
 
   @override
   void initState() {
@@ -37,8 +38,25 @@ class _SpaceShipState extends State<SpaceShip> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (!widget.showShield) const Aim(),
-          if (widget.showShield) const Shield(),
+          Container(
+              key: UniqueKey(),
+              child: StreamBuilder<SpaceShipModel>(
+                  stream: _blocSpaceShip.stream,
+                  builder: (context, snapshot) {
+                    return snapshot.data == null || !snapshot.data!.showShield!
+                        ? const Aim()
+                        : const SizedBox();
+                  })),
+          Container(
+            key: UniqueKey(),
+            child: StreamBuilder<SpaceShipModel>(
+                stream: _blocSpaceShip.stream,
+                builder: (context, snapshot) {
+                  return snapshot.data != null && snapshot.data!.showShield!
+                      ? const Shield()
+                      : const SizedBox();
+                }),
+          ),
           SizedBox(
             width: 600,
             height: 200,
@@ -72,7 +90,7 @@ class _SpaceShipState extends State<SpaceShip> {
                       child: Stack(
                         children: [
                           const CubeWidget(),
-                          if (!widget.showShield)
+                          if (!showShield)
                             Positioned(
                               top: 0,
                               child: LaseShoot(

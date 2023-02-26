@@ -10,6 +10,8 @@ import 'package:space_legends/views/plan/widgets/live_bar.dart';
 import 'package:space_legends/views/plan/widgets/spaceship.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../shared/models/spaceship.dart';
+
 class PlaScreen extends StatefulWidget {
   const PlaScreen({Key? key}) : super(key: key);
 
@@ -39,16 +41,13 @@ class _PlaScreenState extends State<PlaScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final _provider = Provider.of<ProviderController>(context);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       body: Stack(
         key: UniqueKey(),
         children: [
-          SpaceShip(
-            key: UniqueKey(),
-            showShield: _spaceShipBloC.saudeEscudo > 0 &&
-                _spaceShipBloC.space.showShield! == true,
-          ),
+          const SpaceShip(),
           Positioned(
               top: size.width * .04,
               right: size.width * .04,
@@ -73,38 +72,56 @@ class _PlaScreenState extends State<PlaScreen> {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          FloatingActionButton(
-            heroTag: '0',
-            onPressed: () {
-              _spaceShipBloC.raisedShield();
-            },
-            child: Icon(_spaceShipBloC.space.showShield!
-                ? Icons.cancel_outlined
-                : FontAwesomeIcons.shield),
-            backgroundColor:
-                _spaceShipBloC.space.showShield! ? Colors.red : Colors.blue,
-          ),
+          StreamBuilder<SpaceShipModel>(
+              stream: _spaceShipBloC.stream,
+              builder: (context, snapshot) {
+                return FloatingActionButton(
+                  heroTag: '0',
+                  onPressed: () {
+                    _spaceShipBloC.raisedShield();
+                  },
+                  child: Icon(
+                      snapshot.data != null && snapshot.data!.showShield!
+                          ? Icons.cancel_outlined
+                          : FontAwesomeIcons.shield),
+                  backgroundColor:
+                      snapshot.data != null && snapshot.data!.showShield!
+                          ? Colors.red
+                          : Colors.blue,
+                );
+              }),
           const SizedBox(
             height: 15,
           ),
-          GestureDetector(
-            onTapDown: (details) => _spaceShipBloC.startShot(),
-            onTapUp: (details) => _spaceShipBloC.stopShot(),
-            child: Container(
-              width: 55,
-              height: 55,
-              decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 217, 142, 4),
-                  borderRadius: BorderRadius.circular(30)),
-              child: const Center(
-                  child: Icon(FontAwesomeIcons.boltLightning,
-                      color: Colors.white)),
-            ),
-          )
+          StreamBuilder<SpaceShipModel>(
+              stream: _spaceShipBloC.stream,
+              builder: (context, snapshot) {
+                return GestureDetector(
+                        onTapDown:
+                            snapshot.data != null && snapshot.data!.showShield!
+                                ? null
+                                : (details) => _spaceShipBloC.startShot(),
+                        onTapUp:
+                            snapshot.data != null && snapshot.data!.showShield!
+                                ? null
+                                : (details) => _spaceShipBloC.stopShot(),
+                        child: Container(
+                          width: 55,
+                          height: 55,
+                          decoration: BoxDecoration(
+                              color: snapshot.data != null &&
+                                      snapshot.data!.showShield!
+                                  ? const Color.fromARGB(255, 191, 187, 179)
+                                  : const Color.fromARGB(255, 217, 142, 4),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: const Center(
+                              child: Icon(FontAwesomeIcons.boltLightning,
+                                  color: Colors.white)),
+                        ),
+                      );
+              })
         ],
       ),
     );
   }
-
-  
 }

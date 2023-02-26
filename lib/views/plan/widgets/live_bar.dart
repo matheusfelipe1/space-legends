@@ -29,6 +29,7 @@ class _LiveBarState extends State<LiveBar> {
     final size = MediaQuery.of(context).size;
     final read = Provider.of<ProviderController>(context, listen: false);
     return StreamBuilder<SpaceShipModel>(
+      key: UniqueKey(),
         stream: _blocSpaceShip.stream,
         builder: (context, snapshot) {
           double escudoAtual =

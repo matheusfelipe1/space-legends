@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
+  geolocator_windows
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

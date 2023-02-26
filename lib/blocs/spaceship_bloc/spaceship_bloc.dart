@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cube/flutter_cube.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -24,7 +25,6 @@ class SpaceShipBloC {
   Sink<SpaceShipEvent> get inputSpaceship => _inputSpaceShipController.sink;
   Stream<SpaceShipModel> get stream => _outputSpaceShipController.stream;
   Stream<OrientationModel> get streamOrientation => _streamOrientation.stream;
-
   SpaceShipBloC() {
     _inputSpaceShipController.stream.listen(_mapEventsToState);
     _initialize();

@@ -39,9 +39,6 @@ class _CubeWidgetState extends State<CubeWidget> {
         scene.world.add(_blocSpaceShip.space.obj!);
         scene.camera.zoom = 8;
       },
-      onObjectCreated: (_) {
-        read.buildCreate();
-      },
     );
   }
 }

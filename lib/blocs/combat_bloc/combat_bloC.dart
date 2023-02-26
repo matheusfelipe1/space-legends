@@ -1,13 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:space_legends/blocs/combat_bloc/combat_event.dart';
+import 'package:space_legends/blocs/enimies_bloc/enimies_bloC.dart';
+import 'package:space_legends/blocs/spaceship_bloc/spaceship_bloc.dart';
 import 'package:space_legends/shared/models/combat.dart';
+import 'package:space_legends/shared/models/x1.dart';
 
 class CombatBloC {
   CombatModel combat = CombatModel();
   Completer<void> completer = Completer();
   bool cachedFrom = false;
+  bool canShoot = true;
+  late Timer periodc;
   final StreamController<CombatEvent> _outputEvent =
       StreamController<CombatEvent>.broadcast();
   final StreamController<CombatModel> _eventCombat =
@@ -16,6 +23,15 @@ class CombatBloC {
       StreamController<Offset>.broadcast();
   final StreamController<CombatModel> _shotsFromEnimies =
       StreamController<CombatModel>.broadcast();
+  final StreamController<Offset> _offsetAim =
+      StreamController<Offset>.broadcast();
+  final StreamController<X1Model> _1v1controller =
+      StreamController<X1Model>.broadcast();
+  final StreamController<bool> _iShotController =
+      StreamController<bool>.broadcast();
+      
+  final _spaceShipBloC = Modular.get<SpaceShipBloC>();
+  final _enimiesBloC = Modular.get<EnimiesBloC>();
 
   Sink<CombatModel> get inputShotsCombat => _shotsFromEnimies.sink;
   Sink<CombatModel> get inputCombat => _eventCombat.sink;
@@ -24,6 +40,12 @@ class CombatBloC {
   Sink<Offset> get inputOffset => _inputMyOffset.sink;
   Stream<CombatEvent> get output => _outputEvent.stream;
   Stream<Offset> get outputOffset => _inputMyOffset.stream;
+  Stream<bool> get outputIshot => _iShotController.stream;
+  Sink<bool> get inputIshot => _iShotController.sink;
+  Sink<Offset> get inputIshotOffset => _offsetAim.sink;
+  Sink<X1Model> get inputIshotX1 => _1v1controller.sink;
+  Stream<X1Model> get outputIshotX1 => _1v1controller.stream;
+  Stream<Offset> get outputIshotOffset => _offsetAim.stream;
 
   void get newCompleter => completer = Completer();
   Future<void> get awaitFunc async => await completer.future;
@@ -34,6 +56,8 @@ class CombatBloC {
     _outputEvent.stream.listen(_mapEvent);
     _eventCombat.stream.listen(_mapEventCombat);
     _shotsFromEnimies.stream.listen(_mapShotsCombat);
+    _1v1controller.stream.listen(_startShotsFromMe);
+    _startShotsByEnimies();
   }
 
   _mapEvent(CombatEvent event) {
@@ -58,6 +82,23 @@ class CombatBloC {
   }
 
   _mapShotsCombat(CombatModel combat) {
-   
+    if(!combat.fromMe!) {
+      _spaceShipBloC.hitedMe();
+    }
+  }
+
+  _startShotsByEnimies() {
+    periodc = Timer.periodic(const Duration(seconds: 15), (timer) { 
+      canShoot = !canShoot;
+    });
+  }
+
+  _startShotsFromMe(X1Model x1Model) {
+    Offset start = x1Model.myCoordinates!;
+    Offset end = x1Model.enimyCoordinates!;
+    double radius = (Geolocator.distanceBetween(start.dx, start.dx, end.dx, end.dx)/100000);
+    if (radius == 0.0) {
+      print('hited');
+    }
   }
 }

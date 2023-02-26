@@ -5,6 +5,7 @@ import 'package:flutter_cube/flutter_cube.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:space_legends/blocs/combat_bloc/combat_bloC.dart';
 import 'package:space_legends/shared/models/combat.dart';
+import 'package:space_legends/shared/models/x1.dart';
 
 import '../../../blocs/enimies_bloc/enimies_bloC.dart';
 
@@ -62,7 +63,7 @@ class _EnimeObjState extends State<EnimeObj> {
     _bloCCombat.outputOffset.listen((event) async {
       Offset my = event;
       Offset? enimy = _getEnimyPosition();
-    
+
       if (enimy != null) {
         if (_bloCCombat.isFinish) {
           enimy = Offset(enimy.dx, -150.0);

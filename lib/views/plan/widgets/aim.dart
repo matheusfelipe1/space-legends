@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:space_legends/blocs/combat_bloc/combat_bloC.dart';
 
 import '../../../blocs/spaceship_bloc/spaceship_bloc.dart';
 import '../../../shared/models/orientation.dart';
@@ -14,12 +15,23 @@ class Aim extends StatefulWidget {
 
 class _AimState extends State<Aim> {
   final _blocSpaceShip = Modular.get<SpaceShipBloC>();
+  final _blocCombat = Modular.get<CombatBloC>();
   final GlobalKey _key = GlobalKey();
+  Offset? aim;
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _listening();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      key: UniqueKey(),
+                key: _key,
       margin: EdgeInsets.only(right: size.width * .006),
       child: StreamBuilder<OrientationModel>(
           stream: _blocSpaceShip.streamOrientation,
@@ -31,6 +43,7 @@ class _AimState extends State<Aim> {
                 : inclinacao > 0.2
                     ? 200.0
                     : -200.0;
+            aim = Offset(eixoX, 0.0);
             return AnimatedContainer(
               transform: Matrix4.identity()
                 ..setEntry(3, 2, 0.01)
@@ -40,13 +53,23 @@ class _AimState extends State<Aim> {
               width: 20,
               height: 20,
               child: CustomPaint(
-                key: _key,
                 painter: MyPainter(),
                 size: const Size.fromRadius(0),
               ),
             );
           }),
     );
+  }
+
+  _listening() {
+    _blocSpaceShip.outputIshot.listen((event) {
+      if (event) {
+        _blocCombat.inputIshot.add(true);
+        if (aim != null) {
+          _blocCombat.inputIshotOffset.add(aim!);
+        }
+      }
+    });
   }
 
 }

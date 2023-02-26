@@ -55,8 +55,10 @@ class _CubeWidgetState extends State<CubeWidget> {
   }
 
   _getMyPosition() {
-    RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
-    Offset position = box.localToGlobal(Offset.zero);
-    _blocCombat.inputOffset.add(position);
+    if (_blocCombat.canShoot) {
+      RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
+      Offset position = box.localToGlobal(Offset.zero);
+      _blocCombat.inputOffset.add(position);
+    }
   }
 }

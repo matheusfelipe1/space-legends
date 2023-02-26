@@ -12,6 +12,7 @@ import 'package:space_legends/shared/models/combat.dart';
 import 'package:space_legends/shared/models/enimeis.dart';
 import 'package:space_legends/shared/models/orientation.dart';
 
+import '../../../shared/models/x1.dart';
 import 'enime_obj.dart';
 import 'enimies_shot.dart';
 
@@ -24,12 +25,14 @@ class Enimies extends StatefulWidget {
 
 class _EnimiesState extends State<Enimies> {
   final _bloCEnimies = Modular.get<EnimiesBloC>();
-  final _bloCSpaceShip = Modular.get<SpaceShipBloC>();
   final _bloCCombat = Modular.get<CombatBloC>();
+  final _key = GlobalKey();
   late Timer periodic;
   final List<double> possiblePositions = <double>[1.0, -200.0, 200.0];
   double positionCached = 1.0;
   bool firstBuild = true;
+  Offset? enimyOffset;
+
 
   @override
   void initState() {
@@ -39,6 +42,9 @@ class _EnimiesState extends State<Enimies> {
     periodic = Timer.periodic(const Duration(seconds: 10), (timer) {
       _randomPosition();
       firstBuild = false;
+    });
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _listeningShots();
     });
   }
 
@@ -58,7 +64,6 @@ class _EnimiesState extends State<Enimies> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Center(
       child:  Column(
           children: [
@@ -74,6 +79,7 @@ class _EnimiesState extends State<Enimies> {
                       double eixoX = snapshot.data == null
                           ? 1.0
                           : snapshot.data!.horizontal!;
+                      enimyOffset = Offset(eixoX, 0.0);
                       return AnimatedContainer(
                         duration: const Duration(milliseconds: 1000),
                         curve: Curves.easeInOut,
@@ -91,24 +97,9 @@ class _EnimiesState extends State<Enimies> {
                 double x = snapshot.data == null ? 1.0 : snapshot.data!.myCoordinates!.dx;
                 double y = snapshot.data == null ? 1.0 : snapshot.data!.myCoordinates!.dy;
                 bool fromMe = snapshot.data == null ? false: snapshot.data!.fromMe!;
-                // print(snapshot.data!.myCoordinates);
-                // print(snapshot.data!.fromMe);
-                // double inclinacao = snapshot.data == null
-                //         ? 1.0
-                //         : snapshot.data!.horizontal!;
-                //     double eixoX = inclinacao >= -0.2 && inclinacao <= 0.2
-                //         ? 1.0
-                //         : inclinacao > 0.2
-                //             ? 200.0
-                //             : -200.0;
-                //     double eixoY = snapshot.data == null
-                //         ? 1.0
-                //         : snapshot.data!.vertical! >= 0.1
-                //             ? 60
-                //             : -60;
                 return AnimatedOpacity(
                   duration: const Duration(milliseconds: 50),
-                  opacity: fromMe ? 1.0 : 0.0,
+                  opacity: fromMe && _bloCCombat.canShoot ? 1.0 : 0.0,
                   child: AnimatedContainer(
                     height: 90,
                     width: 90,
@@ -153,4 +144,15 @@ class _EnimiesState extends State<Enimies> {
     }
     return false;
   }
+
+  _listeningShots() {
+    _bloCCombat.outputIshotOffset.listen((event) {
+      if (enimyOffset != null) {
+        X1Model x1 = X1Model(myCoordinates: event, enimyCoordinates: enimyOffset);
+        _bloCCombat.inputIshotX1.add(x1);
+      }
+    });
+  }
+
+  
 }

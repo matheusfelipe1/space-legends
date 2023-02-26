@@ -4,7 +4,9 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cube/flutter_cube.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:space_legends/blocs/combat_bloc/combat_bloC.dart';
 import 'package:space_legends/blocs/spaceship_bloc/spaceship_event.dart';
 import 'package:space_legends/shared/models/orientation.dart';
 import 'package:space_legends/shared/models/spaceship.dart';
@@ -12,7 +14,7 @@ import '../../shared/middleware/constants.dart';
 
 class SpaceShipBloC {
   SpaceShipModel space = SpaceShipModel();
-  final  AudioPlayer audio = AudioPlayer();
+  final AudioPlayer audio = AudioPlayer();
   final OrientationModel cachedOrientation = OrientationModel();
   final StreamController<SpaceShipEvent> _inputSpaceShipController =
       StreamController<SpaceShipEvent>();
@@ -20,10 +22,15 @@ class SpaceShipBloC {
       StreamController<SpaceShipModel>.broadcast();
   final StreamController<OrientationModel> _streamOrientation =
       StreamController<OrientationModel>.broadcast();
+  final StreamController<bool> _iShotController =
+      StreamController<bool>.broadcast();
 
   Sink<SpaceShipEvent> get inputSpaceship => _inputSpaceShipController.sink;
   Stream<SpaceShipModel> get stream => _outputSpaceShipController.stream;
   Stream<OrientationModel> get streamOrientation => _streamOrientation.stream;
+  Stream<bool> get outputIshot => _iShotController.stream;
+  Sink<bool> get inputIshot => _iShotController.sink;
+
   SpaceShipBloC() {
     _inputSpaceShipController.stream.listen(_mapEventsToState);
     _initialize();
@@ -153,6 +160,7 @@ class SpaceShipBloC {
     _inputSpaceShipController.sink.add(SpaceShipIShot(spaceShipModel: space));
     HapticFeedback.vibrate();
     _showSound();
+    inputIshot.add(true);
   }
 
   _showSound() {

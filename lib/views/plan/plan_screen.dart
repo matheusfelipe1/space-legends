@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
+import 'package:space_legends/blocs/combat_bloc/combat_bloC.dart';
 import 'package:space_legends/blocs/spaceship_bloc/spaceship_bloc.dart';
 import 'package:space_legends/views/plan/provider_controller.dart';
 import 'package:space_legends/views/plan/widgets/buffering_game.dart';
@@ -22,11 +23,14 @@ class PlaScreen extends StatefulWidget {
 
 class _PlaScreenState extends State<PlaScreen> {
   final _spaceShipBloC = Modular.get<SpaceShipBloC>();
+  final _blocCombat = Modular.get<CombatBloC>();
   List<Offset> offsets = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _blocCombat.newCompleter;
+    _blocCombat.finish;
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
@@ -47,13 +51,6 @@ class _PlaScreenState extends State<PlaScreen> {
       body: Stack(
         key: UniqueKey(),
         children: [
-          SizedBox(
-              height: size.height,
-              width: size.width,
-              child: Image.asset(
-                'assets/images/gif.gif',
-                fit: BoxFit.cover,
-              )),
           const SpaceShip(),
           Positioned(
               top: size.width * .04,

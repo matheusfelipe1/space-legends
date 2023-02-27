@@ -3,12 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 import 'package:space_legends/shared/middleware/constants.dart';
 import 'package:space_legends/views/plan/widgets/stars.dart';
 
 import '../../../blocs/spaceship_bloc/spaceship_bloc.dart';
-import '../provider_controller.dart';
 
 class GenerateSTARS extends StatefulWidget {
   List<Offset> offsets;

@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:space_legends/blocs/combat_bloc/combat_event.dart';
 import 'package:space_legends/blocs/enimies_bloc/enimies_bloC.dart';
 import 'package:space_legends/blocs/spaceship_bloc/spaceship_bloc.dart';
+import 'package:space_legends/shared/middleware/constants.dart';
 import 'package:space_legends/shared/models/combat.dart';
 import 'package:space_legends/shared/models/x1.dart';
 
@@ -14,6 +15,9 @@ class CombatBloC {
   Completer<void> completer = Completer();
   bool cachedFrom = false;
   bool canShoot = true;
+  int scores = 0;
+  int kills = 0;
+  bool killed = false;
   late Timer periodc;
   final StreamController<CombatEvent> _outputEvent =
       StreamController<CombatEvent>.broadcast();
@@ -29,7 +33,8 @@ class CombatBloC {
       StreamController<X1Model>.broadcast();
   final StreamController<bool> _iShotController =
       StreamController<bool>.broadcast();
-      
+  final StreamController<bool> _iHited = StreamController<bool>.broadcast();
+
   final _spaceShipBloC = Modular.get<SpaceShipBloC>();
   final _enimiesBloC = Modular.get<EnimiesBloC>();
 
@@ -46,6 +51,8 @@ class CombatBloC {
   Sink<X1Model> get inputIshotX1 => _1v1controller.sink;
   Stream<X1Model> get outputIshotX1 => _1v1controller.stream;
   Stream<Offset> get outputIshotOffset => _offsetAim.stream;
+  Stream<bool> get outputIHit => _iHited.stream;
+  Sink<bool> get inputIHit => _iHited.sink;
 
   void get newCompleter => completer = Completer();
   Future<void> get awaitFunc async => await completer.future;
@@ -82,23 +89,35 @@ class CombatBloC {
   }
 
   _mapShotsCombat(CombatModel combat) {
-    if(!combat.fromMe!) {
+    if (!combat.fromMe!) {
       _spaceShipBloC.hitedMe();
     }
   }
 
   _startShotsByEnimies() {
-    periodc = Timer.periodic(const Duration(seconds: 15), (timer) { 
+    periodc = Timer.periodic(const Duration(seconds: 15), (timer) {
       canShoot = !canShoot;
     });
   }
 
   _startShotsFromMe(X1Model x1Model) {
-    Offset start = x1Model.myCoordinates!;
-    Offset end = x1Model.enimyCoordinates!;
-    double radius = (Geolocator.distanceBetween(start.dx, start.dx, end.dx, end.dx)/100000);
-    if (radius == 0.0) {
-      print('hited');
+    if (!killed) {
+      Offset start = x1Model.myCoordinates!;
+      Offset end = x1Model.enimyCoordinates!;
+      double radius =
+          (Geolocator.distanceBetween(start.dx, start.dx, end.dx, end.dx) /
+              100000);
+      if (radius == 0.0) {
+        inputIHit.add(true);
+        scores += Constants.score;
+        _enimiesBloC.inputHit.add(true);
+      }
     }
+  }
+
+  enimyDown() {
+    _enimiesBloC.inputHit.add(true);
+    kills += 1;
+    killed = true;
   }
 }

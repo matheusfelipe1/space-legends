@@ -67,6 +67,7 @@ class _LiveBarState extends State<LiveBar> {
                         bottomLeft: Radius.circular(25)),
                     border: Border.all(color: Colors.black, width: 2)),
               ),
+              const Text('Matheus', style: TextStyle(color: Colors.white,fontSize: 25.2, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),)
             ],
           );
         });

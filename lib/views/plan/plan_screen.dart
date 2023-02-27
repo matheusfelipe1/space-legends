@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:provider/provider.dart';
 import 'package:space_legends/blocs/combat_bloc/combat_bloC.dart';
+import 'package:space_legends/blocs/enimies_bloc/enimies_bloC.dart';
 import 'package:space_legends/blocs/spaceship_bloc/spaceship_bloc.dart';
-import 'package:space_legends/views/plan/provider_controller.dart';
-import 'package:space_legends/views/plan/widgets/buffering_game.dart';
-import 'package:space_legends/views/plan/widgets/enimies.dart';
-import 'package:space_legends/views/plan/widgets/generate_stars.dart';
 import 'package:space_legends/views/plan/widgets/live_bar.dart';
+import 'package:space_legends/views/plan/widgets/scores.dart';
+import 'package:space_legends/views/plan/widgets/show_enimies.dart';
 import 'package:space_legends/views/plan/widgets/spaceship.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -23,6 +21,7 @@ class PlaScreen extends StatefulWidget {
 
 class _PlaScreenState extends State<PlaScreen> {
   final _spaceShipBloC = Modular.get<SpaceShipBloC>();
+  final _enimyBloC = Modular.get<EnimiesBloC>();
   final _blocCombat = Modular.get<CombatBloC>();
   List<Offset> offsets = [];
   @override
@@ -35,6 +34,9 @@ class _PlaScreenState extends State<PlaScreen> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+    Future.delayed(const Duration(seconds: 12), () {
+      _enimyBloC.inputDeath.add(false);
+    });
   }
 
   @override
@@ -58,7 +60,11 @@ class _PlaScreenState extends State<PlaScreen> {
               child: LiveBar(
                 key: UniqueKey(),
               )),
-          const Enimies(),
+          const ShowEnimies(),
+          const Positioned(
+            bottom: 0,
+            left: 0,
+            child:  Scores()),
           Positioned(
               top: 0,
               right: 0,

@@ -4,9 +4,7 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cube/flutter_cube.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:sensors_plus/sensors_plus.dart';
-import 'package:space_legends/blocs/combat_bloc/combat_bloC.dart';
 import 'package:space_legends/blocs/spaceship_bloc/spaceship_event.dart';
 import 'package:space_legends/shared/models/orientation.dart';
 import 'package:space_legends/shared/models/spaceship.dart';
@@ -106,21 +104,23 @@ class SpaceShipBloC {
   }
 
   hitedMe() {
-    double verifica = space.vidaAtual!;
-    if ((verifica -= space.qttDano!) <= 0.0) {
-      space.vidaAtual = 0.0;
-      space.vida!.clear();
-    } else {
-      double vida = space.vidaAtual!;
-      double dano = space.qttDano!;
-      space.vidaAtual = vida - dano;
+    if (!space.showShield!) {
+      double verifica = space.vidaAtual!;
+      if ((verifica -= space.qttDano!) <= 0.0) {
+        space.vidaAtual = 0.0;
+        space.vida!.clear();
+      } else {
+        double vida = space.vidaAtual!;
+        double dano = space.qttDano!;
+        space.vidaAtual = vida - dano;
+      }
+      if (space.vida!.isNotEmpty) {
+        space.vida!.removeLast();
+      } else {
+        space.vidaAtual = 0.0;
+      }
+      _inputSpaceShipController.sink.add(SpaceShipHitMe(spaceShipModel: space));
     }
-    if (space.vida!.isNotEmpty) {
-      space.vida!.removeLast();
-    } else {
-      space.vidaAtual = 0.0;
-    }
-    _inputSpaceShipController.sink.add(SpaceShipHitMe(spaceShipModel: space));
   }
 
   raisedShield() {

@@ -2,14 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cube/flutter_cube.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:space_legends/blocs/combat_bloc/combat_bloC.dart';
-import 'package:space_legends/blocs/combat_bloc/combat_event.dart';
 import 'package:space_legends/blocs/enimies_bloc/enimies_bloC.dart';
-import 'package:space_legends/blocs/spaceship_bloc/spaceship_bloc.dart';
 import 'package:space_legends/shared/models/combat.dart';
-import 'package:space_legends/shared/models/enimeis.dart';
 import 'package:space_legends/shared/models/orientation.dart';
 
 import '../../../shared/models/x1.dart';

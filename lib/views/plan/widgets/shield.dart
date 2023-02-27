@@ -17,7 +17,9 @@ class _ShieldState extends State<Shield> {
   @override
   Widget build(BuildContext context) {
     return Container(
+            key: UniqueKey(),
       child: StreamBuilder<OrientationModel>(
+            key: UniqueKey(),
           stream: _blocSpaceShip.streamOrientation,
           builder: (context, snapshot) {
             double inclinacao =

@@ -95,7 +95,7 @@ class CombatBloC {
   }
 
   _startShotsByEnimies() {
-    periodc = Timer.periodic(const Duration(seconds: 15), (timer) {
+    periodc = Timer.periodic(const Duration(seconds: 20), (timer) {
       canShoot = !canShoot;
     });
   }

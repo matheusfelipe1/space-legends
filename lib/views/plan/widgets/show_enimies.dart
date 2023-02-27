@@ -17,20 +17,26 @@ class _ShowEnimiesState extends State<ShowEnimies> {
   final _bloCCombat = Modular.get<CombatBloC>();
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<bool>(
-        stream: _bloCEnimy.outputDeath,
-        builder: (context, snapshot) {
-          if (snapshot.data != null && snapshot.data == true) {
-            _bloCCombat.enimyDown();
-          }
-          return snapshot.data == null
-              ? const SizedBox()
-              : snapshot.data == true
-                  ? const SizedBox()
-                  : Container(
-                      key: UniqueKey(),
-                      child: const Enimies(),
-                    );
-        });
+    return Container(
+      key: UniqueKey(),
+      child: StreamBuilder<bool>(
+      key: UniqueKey(),
+          stream: _bloCEnimy.outputDeath,
+          builder: (context, snapshot) {
+            if (snapshot.data != null && snapshot.data == true) {
+              _bloCCombat.enimyDown();
+            } else if (snapshot.data != null && snapshot.data == false) {
+              _bloCCombat.killed = false;
+            }
+            return snapshot.data == null
+                ? const SizedBox()
+                : snapshot.data == true
+                    ? const SizedBox()
+                    : Container(
+                        key: UniqueKey(),
+                        child: const Enimies(),
+                      );
+          }),
+    );
   }
 }

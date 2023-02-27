@@ -52,7 +52,7 @@ class EnimiesBloC {
       ..setEntry(3, 2, 0.01)
       ..rotateY(0.7);
     enimies.vida = [];
-    for (var i = 0; i < 15; i++) {
+    for (var i = 0; i < 40; i++) {
       enimies.vida!.add(i);
     }
   }
@@ -62,9 +62,24 @@ class EnimiesBloC {
     if (data) {
       if (enimies.vida!.isEmpty) {
         inputDeath.add(true);
+        _restartEnimies();
       } else {
         enimies.vida!.removeLast();
       }
     }
+  }
+
+  _restartEnimies() {
+    enimies.obj = Object(fileName: 'assets/cube/Low_poly_UFO.obj');
+    enimies.obj!.transform
+      ..setEntry(3, 2, 0.01)
+      ..rotateY(0.7);
+    enimies.vida = [];
+    for (var i = 0; i < 40; i++) {
+      enimies.vida!.add(i);
+    }
+    Future.delayed(const Duration(seconds: 7),() {
+      inputDeath.add(false);
+    });
   }
 }

@@ -41,6 +41,7 @@ class _SpaceShipState extends State<SpaceShip> {
           Container(
               key: UniqueKey(),
               child: StreamBuilder<SpaceShipModel>(
+                  key: UniqueKey(),
                   stream: _blocSpaceShip.stream,
                   builder: (context, snapshot) {
                     return snapshot.data == null || !snapshot.data!.showShield!
@@ -50,6 +51,7 @@ class _SpaceShipState extends State<SpaceShip> {
           Container(
             key: UniqueKey(),
             child: StreamBuilder<SpaceShipModel>(
+            key: UniqueKey(),
                 stream: _blocSpaceShip.stream,
                 builder: (context, snapshot) {
                   return snapshot.data != null && snapshot.data!.showShield!
@@ -64,6 +66,7 @@ class _SpaceShipState extends State<SpaceShip> {
               width: 200,
               height: 200,
               child: StreamBuilder<OrientationModel>(
+            key: UniqueKey(),
                   stream: _blocSpaceShip.streamOrientation,
                   builder: (context, snapshot) {
                     double inclinacao = snapshot.data == null

@@ -34,6 +34,7 @@ class _AimState extends State<Aim> {
                 key: _key,
       margin: EdgeInsets.only(right: size.width * .006),
       child: StreamBuilder<OrientationModel>(
+            key: UniqueKey(),
           stream: _blocSpaceShip.streamOrientation,
           builder: (context, snapshot) {
             double inclinacao =

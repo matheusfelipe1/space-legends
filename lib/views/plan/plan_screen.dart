@@ -34,7 +34,7 @@ class _PlaScreenState extends State<PlaScreen> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
-    Future.delayed(const Duration(seconds: 12), () {
+    Future.delayed(const Duration(seconds: 7), () {
       _enimyBloC.inputDeath.add(false);
     });
   }
@@ -84,6 +84,7 @@ class _PlaScreenState extends State<PlaScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           StreamBuilder<SpaceShipModel>(
+            key: UniqueKey(),
               stream: _spaceShipBloC.stream,
               builder: (context, snapshot) {
                 return FloatingActionButton(
@@ -105,6 +106,7 @@ class _PlaScreenState extends State<PlaScreen> {
             height: 15,
           ),
           StreamBuilder<SpaceShipModel>(
+            key: UniqueKey(),
               stream: _spaceShipBloC.stream,
               builder: (context, snapshot) {
                 return GestureDetector(

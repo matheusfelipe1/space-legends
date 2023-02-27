@@ -20,19 +20,18 @@ class _EnimeObjState extends State<EnimeObj> {
   final _bloCEnimies = Modular.get<EnimiesBloC>();
   final _bloCCombat = Modular.get<CombatBloC>();
   final _key = GlobalKey();
-  late Timer timer;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _bloCEnimies.enimies.obj = Object(fileName: 'assets/cube/Low_poly_UFO.obj');
     periodic = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       _bloCEnimies.enimies.obj!.transform
         ..setEntry(3, 2, 0.01)
         ..rotateY(0.7);
     });
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _bloCEnimies.enimies.obj = Object(fileName: 'assets/cube/Low_poly_UFO.obj');
       Future.delayed(const Duration(seconds: 3), () {
         _listening();
       });
@@ -43,7 +42,7 @@ class _EnimeObjState extends State<EnimeObj> {
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
-    periodic.cancel();
+    if (mounted) periodic.cancel();
   }
 
   @override

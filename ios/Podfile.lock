@@ -37,7 +37,7 @@ SPEC CHECKSUMS:
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   camera_avfoundation: 07c77549ea54ad95d8581be86617c094a46280d9
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
+  geolocator_apple: b741765c55dc21950e3e106e8b3584e55cf81ce5
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   sensors_plus: 5717760720f7e6acd96fdbd75b7428f5ad755ec2
 

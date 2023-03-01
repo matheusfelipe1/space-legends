@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -36,6 +37,10 @@ class _PlaScreenState extends State<PlaScreen> {
     ]);
     Future.delayed(const Duration(seconds: 7), () {
       _enimyBloC.inputDeath.add(false);
+    });
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      final audio = AudioPlayer();
+      audio.play(AssetSource('images/epic.wav'));
     });
   }
 

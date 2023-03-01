@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_cube/flutter_cube.dart';
 import 'package:space_legends/blocs/enimies_bloc/enimies_event.dart';
 import 'package:space_legends/shared/models/enimeis.dart';
@@ -12,6 +13,7 @@ class EnimiesBloC {
       StreamController<EnimiesModel>.broadcast();
   final StreamController<bool> _inputHit = StreamController<bool>.broadcast();
   final StreamController<bool> _inputDeath = StreamController<bool>.broadcast();
+  Completer<void> finishAudio = Completer();
 
   final StreamController<OrientationModel> _orientationInputOutput =
       StreamController<OrientationModel>.broadcast();
@@ -30,6 +32,7 @@ class EnimiesBloC {
     outputEnimies.listen(_mapEvents);
     outputHit.listen(_hitInEnimies);
     _startGame();
+    finishAudio.complete();
   }
 
   _mapEvents(EnimiesEvent event) {
@@ -57,14 +60,19 @@ class EnimiesBloC {
     }
   }
 
-  _hitInEnimies(bool data) {
+  _hitInEnimies(bool data) async {
     // print(enimies.vida!.isEmpty);
-    if (data) {
-      if (enimies.vida!.isEmpty) {
-        inputDeath.add(true);
-        _restartEnimies();
-      } else {
-        enimies.vida!.removeLast();
+    if (finishAudio.isCompleted) {
+      if (data) {
+        if (enimies.vida!.isEmpty) {
+          finishAudio = Completer();
+          _soundEnimyDeath();
+          await finishAudio.future;
+          inputDeath.add(true);
+          _restartEnimies();
+        } else {
+          enimies.vida!.removeLast();
+        }
       }
     }
   }
@@ -78,8 +86,16 @@ class EnimiesBloC {
     for (var i = 0; i < 40; i++) {
       enimies.vida!.add(i);
     }
-    Future.delayed(const Duration(seconds: 7),() {
+    Future.delayed(const Duration(seconds: 7), () {
       inputDeath.add(false);
     });
+  }
+
+  _soundEnimyDeath() {
+    final play = AudioPlayer();
+    play
+        .play(AssetSource('images/enimy-death2.wav'))
+        .then((value) => finishAudio.complete())
+        .catchError((onError) => finishAudio.complete());
   }
 }

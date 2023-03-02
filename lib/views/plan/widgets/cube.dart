@@ -18,6 +18,7 @@ class _CubeWidgetState extends State<CubeWidget> {
   final _blocCombat = Modular.get<CombatBloC>();
   final _key = GlobalKey();
   late Timer timer;
+  late StreamSubscription _subs;
 
   @override
   void initState() {
@@ -29,9 +30,7 @@ class _CubeWidgetState extends State<CubeWidget> {
       ..setEntry(3, 2, 0.01)
       ..rotateX(-0.7);
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-        _getMyPosition();
-      });
+      _getMyPosition();
     });
   }
 
@@ -39,26 +38,32 @@ class _CubeWidgetState extends State<CubeWidget> {
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
-    timer.cancel();
+    _subs.cancel();
+    // timer.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Cube(
-      key: _key,
-      interactive: false,
-      onSceneCreated: (scene) {
-        scene.world.add(_blocSpaceShip.space.obj!);
-        scene.camera.zoom = 8;
-      },
+    return Container(
+      key: UniqueKey(),
+      child: Cube(
+        key: _key,
+        interactive: false,
+        onSceneCreated: (scene) {
+          scene.world.add(_blocSpaceShip.space.obj!);
+          scene.camera.zoom = 8;
+        },
+      ),
     );
   }
 
   _getMyPosition() {
-    if (_blocCombat.canShoot) {
-      RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
-      Offset position = box.localToGlobal(Offset.zero);
-      _blocCombat.inputOffset.add(position);
-    }
+    _subs = _blocCombat.periodc.listen((event) {
+      if (_blocCombat.canShoot && !_blocCombat.killed) {
+        RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
+        Offset position = box.localToGlobal(Offset.zero);
+        _blocCombat.inputOffset.add(position);
+      }
+    });
   }
 }

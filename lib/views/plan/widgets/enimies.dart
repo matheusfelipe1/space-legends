@@ -22,7 +22,8 @@ class Enimies extends StatefulWidget {
 class _EnimiesState extends State<Enimies> {
   final _bloCEnimies = Modular.get<EnimiesBloC>();
   final _bloCCombat = Modular.get<CombatBloC>();
-  late Timer periodic;
+  late Stream periodic;
+  late StreamSubscription _subs;
   final List<double> possiblePositions = <double>[1.0, -200.0, 200.0];
   double positionCached = 1.0;
   bool firstBuild = true;
@@ -35,14 +36,11 @@ class _EnimiesState extends State<Enimies> {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       _listeningShots();
       _randomPosition();
-      periodic = Timer.periodic(const Duration(seconds: 10), (timer) {
-        if (_bloCCombat.killed) {
-          periodic.cancel();
-        } else {
-          _randomPosition();
-          firstBuild = false;
-        }
-      });
+      periodic =
+          Stream.periodic(const Duration(seconds: 10), (computationCount) {
+        return null;
+      }).takeWhile((element) => true);
+      _listeningPositions();
     });
   }
 
@@ -50,14 +48,14 @@ class _EnimiesState extends State<Enimies> {
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
-    periodic.cancel();
+    _subs.cancel();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    periodic.cancel();
+    _subs.cancel();
   }
 
   @override
@@ -156,6 +154,17 @@ class _EnimiesState extends State<Enimies> {
         X1Model x1 =
             X1Model(myCoordinates: event, enimyCoordinates: enimyOffset);
         _bloCCombat.inputIshotX1.add(x1);
+      }
+    });
+  }
+
+  _listeningPositions() {
+    _subs = periodic.listen((event) {
+      if (_bloCCombat.killed) {
+        _subs.cancel();
+      } else {
+        _randomPosition();
+        firstBuild = false;
       }
     });
   }

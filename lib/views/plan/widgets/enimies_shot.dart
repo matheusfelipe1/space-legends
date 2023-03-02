@@ -25,7 +25,6 @@ class MyPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // TODO: implement paint
     // TODO: implement paint
-    Paint paint2 = Paint()..color = Colors.white;
     Paint paint = Paint()
       ..shader = RadialGradient(
         colors: [

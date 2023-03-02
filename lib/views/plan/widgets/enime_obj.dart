@@ -16,7 +16,8 @@ class EnimeObj extends StatefulWidget {
 }
 
 class _EnimeObjState extends State<EnimeObj> {
-  late Timer periodic;
+  late Stream<void> periodic;
+  late StreamSubscription _subs;
   final _bloCEnimies = Modular.get<EnimiesBloC>();
   final _bloCCombat = Modular.get<CombatBloC>();
   final _key = GlobalKey();
@@ -25,13 +26,13 @@ class _EnimeObjState extends State<EnimeObj> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    periodic = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      _bloCEnimies.enimies.obj!.transform
-        ..setEntry(3, 2, 0.01)
-        ..rotateY(0.7);
-    });
+    periodic =
+        Stream<void>.periodic(const Duration(milliseconds: 100), (timer) {})
+            .takeWhile((element) => true);
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      _bloCEnimies.enimies.obj = Object(fileName: 'assets/cube/Low_poly_UFO.obj');
+      _bloCEnimies.enimies.obj =
+          Object(fileName: 'assets/cube/Low_poly_UFO.obj');
+      _listeningRotation();
       Future.delayed(const Duration(seconds: 3), () {
         _listening();
       });
@@ -42,18 +43,21 @@ class _EnimeObjState extends State<EnimeObj> {
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
-    if (mounted) periodic.cancel();
+    _subs.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Cube(
-      key: _key,
-      interactive: false,
-      onSceneCreated: (scene) {
-        scene.world.add(_bloCEnimies.enimies.obj!);
-        scene.camera.zoom = 8;
-      },
+    return Container(
+      key: UniqueKey(),
+      child: Cube(
+        key: _key,
+        interactive: false,
+        onSceneCreated: (scene) {
+          scene.world.add(_bloCEnimies.enimies.obj!);
+          scene.camera.zoom = 8;
+        },
+      ),
     );
   }
 
@@ -68,7 +72,6 @@ class _EnimeObjState extends State<EnimeObj> {
     _bloCCombat.outputOffset.listen((event) async {
       Offset my = event;
       Offset? enimy = _getEnimyPosition();
-
       if (enimy != null) {
         if (_bloCCombat.isFinish) {
           enimy = Offset(enimy.dx, -150.0);
@@ -80,6 +83,14 @@ class _EnimeObjState extends State<EnimeObj> {
         }
         _bloCCombat.newCompleter;
       }
+    });
+  }
+
+  _listeningRotation() {
+    _subs = periodic.listen((event) {
+      _bloCEnimies.enimies.obj!.transform
+        ..setEntry(3, 2, 0.01)
+        ..rotateY(0.7);
     });
   }
 }

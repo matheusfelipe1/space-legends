@@ -27,7 +27,8 @@ class _LaseShootState extends State<LaseShoot> {
     return StreamBuilder<SpaceShipModel>(
         stream: _blocSpaceShip.stream,
         builder: (context, snapshot) {
-          bool showShot = snapshot.data == null ? false : snapshot.data!.iShot!;
+          bool showShot =
+              snapshot.data == null ? false : snapshot.data!.iShot!;
           return AnimatedOpacity(
             opacity: showShot ? 1.0 : 0.0,
             duration: const Duration(milliseconds: 700),
@@ -118,7 +119,8 @@ class MyPainter extends CustomPainter {
           ? const RadialGradient(colors: [
               Colors.yellow,
               Colors.transparent,
-            ]).createShader(Rect.fromCircle(center: const Offset(18, 5), radius: 18))
+            ]).createShader(
+              Rect.fromCircle(center: const Offset(18, 5), radius: 18))
           : const LinearGradient(
               begin: Alignment(0, 0),
               end: Alignment(5, 0),

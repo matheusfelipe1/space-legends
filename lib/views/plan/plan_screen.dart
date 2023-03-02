@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,23 +26,28 @@ class _PlaScreenState extends State<PlaScreen> {
   final _spaceShipBloC = Modular.get<SpaceShipBloC>();
   final _enimyBloC = Modular.get<EnimiesBloC>();
   final _blocCombat = Modular.get<CombatBloC>();
+  late StreamSubscription _subs;
   List<Offset> offsets = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _blocCombat.newCompleter;
-    _blocCombat.finish;
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
-    Future.delayed(const Duration(seconds: 7), () {
-      _enimyBloC.inputDeath.add(false);
-    });
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       final audio = AudioPlayer();
       audio.play(AssetSource('images/epic.wav'));
+      _blocCombat.newCompleter;
+      _blocCombat.finish;
+      _subs = _blocCombat.periodcCanShot.listen((event) {
+        _blocCombat.swithVal();
+      });
+      Future.delayed(const Duration(seconds: 7), () {
+        _enimyBloC.inputDeath.add(false);
+      });
     });
   }
 
@@ -48,6 +55,7 @@ class _PlaScreenState extends State<PlaScreen> {
   void deactivate() {
     // TODO: implement deactivate
     super.deactivate();
+    _subs.cancel();
   }
 
   @override
@@ -66,10 +74,7 @@ class _PlaScreenState extends State<PlaScreen> {
                 key: UniqueKey(),
               )),
           const ShowEnimies(),
-          const Positioned(
-            bottom: 0,
-            left: 0,
-            child:  Scores()),
+          const Positioned(bottom: 0, left: 0, child: Scores()),
           Positioned(
               top: 0,
               right: 0,
@@ -89,7 +94,7 @@ class _PlaScreenState extends State<PlaScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           StreamBuilder<SpaceShipModel>(
-            key: UniqueKey(),
+              key: UniqueKey(),
               stream: _spaceShipBloC.stream,
               builder: (context, snapshot) {
                 return FloatingActionButton(
@@ -111,7 +116,7 @@ class _PlaScreenState extends State<PlaScreen> {
             height: 15,
           ),
           StreamBuilder<SpaceShipModel>(
-            key: UniqueKey(),
+              key: UniqueKey(),
               stream: _spaceShipBloC.stream,
               builder: (context, snapshot) {
                 return GestureDetector(

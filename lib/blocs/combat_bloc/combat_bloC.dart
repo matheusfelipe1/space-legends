@@ -18,7 +18,8 @@ class CombatBloC {
   int scores = 0;
   int kills = 0;
   bool killed = false;
-  late Timer periodc;
+  late Stream<bool> periodc;
+  late Stream<dynamic> periodcCanShot;
   final StreamController<CombatEvent> _outputEvent =
       StreamController<CombatEvent>.broadcast();
   final StreamController<CombatModel> _eventCombat =
@@ -95,9 +96,15 @@ class CombatBloC {
   }
 
   _startShotsByEnimies() {
-    periodc = Timer.periodic(const Duration(seconds: 20), (timer) {
-      canShoot = !canShoot;
-    });
+    periodc = Stream<bool>.periodic(const Duration(milliseconds: 100), (count) {
+      return true;
+    }).takeWhile((element) => true);
+    periodcCanShot =
+        Stream<dynamic>.periodic(const Duration(seconds: 10), (count) => null).takeWhile((element) => true);
+  }
+
+  swithVal() {
+   canShoot = !canShoot;
   }
 
   _startShotsFromMe(X1Model x1Model) {

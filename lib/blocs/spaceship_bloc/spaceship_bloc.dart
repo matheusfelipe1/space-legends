@@ -120,6 +120,25 @@ class SpaceShipBloC {
         space.vidaAtual = 0.0;
       }
       _inputSpaceShipController.sink.add(SpaceShipHitMe(spaceShipModel: space));
+    } else {
+      double verifica = space.escudoAtual!;
+      if ((verifica -= space.qttEscudo!) <= 0.0) {
+        space.escudoAtual = 0.0;
+        space.escudo!.clear();
+      } else {
+        double escudo = space.escudoAtual!;
+        double carga = space.qttEscudo!;
+        space.escudoAtual = escudo - carga;
+      }
+      if (space.escudo!.isNotEmpty) {
+        space.escudo!.removeLast();
+      } else {
+        space.escudoAtual = 0.0;
+        space.showShield = false;
+        Future.delayed(const Duration(seconds: 7), () => restartShield());
+      }
+      _inputSpaceShipController.sink
+          .add(SpaceShipRaiseShields(spaceShipModel: space));
     }
   }
 
@@ -138,6 +157,7 @@ class SpaceShipBloC {
         space.escudo!.removeLast();
       } else {
         space.escudoAtual = 0.0;
+        Future.delayed(const Duration(seconds: 7), () => restartShield());
       }
     }
     space.showShield = !space.showShield!;
@@ -170,5 +190,35 @@ class SpaceShipBloC {
   stopShot() {
     space.iShot = false;
     _inputSpaceShipController.sink.add(SpaceShipIShot(spaceShipModel: space));
+  }
+
+  downEnimy() {
+    if (!((space.vida!.length + 3) > Constants.maxVida)) {
+      for (var i = 0; i < 3; i++) {
+        double vida = space.vidaAtual!;
+        double dano = space.qttDano!;
+        space.vidaAtual = vida + dano;
+        space.vida!.add(i);
+      }
+    } else {
+      final value = Constants.maxVida - space.vida!.length;
+      for (var i = 0; i < value; i++) {
+        double vida = space.vidaAtual!;
+        double dano = space.qttDano!;
+        space.vidaAtual = vida + dano;
+        space.vida!.add(i);
+      }
+    }
+    _inputSpaceShipController.sink.add(SpaceShipHitMe(spaceShipModel: space));
+  }
+
+  restartShield() {
+    for (var i = 0; i < Constants.maxEscudo; i++) {
+      space.escudo!.add(i);
+    }
+    space.qttEscudo = 230 / space.escudo!.length;
+    space.escudoAtual = 230;
+    _inputSpaceShipController.sink
+        .add(SpaceShipRaiseShields(spaceShipModel: space));
   }
 }

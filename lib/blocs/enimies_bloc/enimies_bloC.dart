@@ -54,38 +54,32 @@ class EnimiesBloC {
     enimies.obj!.transform
       ..setEntry(3, 2, 0.01)
       ..rotateY(0.7);
-    enimies.vida = [];
-    for (var i = 0; i < 40; i++) {
-      enimies.vida!.add(i);
-    }
+    enimies.vida = 40;
   }
 
   _hitInEnimies(bool data) async {
     // print(enimies.vida!.isEmpty);
     if (finishAudio.isCompleted) {
       if (data) {
-        if (enimies.vida!.isEmpty) {
+        if (enimies.vida == 0) {
           finishAudio = Completer();
           _soundEnimyDeath();
           await finishAudio.future;
           inputDeath.add(true);
           _restartEnimies();
         } else {
-          enimies.vida!.removeLast();
+          enimies.vida = enimies.vida! - 1;
         }
       }
     }
   }
 
   _restartEnimies() {
+    enimies.vida = 40;
     enimies.obj = Object(fileName: 'assets/cube/Low_poly_UFO.obj');
     enimies.obj!.transform
       ..setEntry(3, 2, 0.01)
       ..rotateY(0.7);
-    enimies.vida = [];
-    for (var i = 0; i < 40; i++) {
-      enimies.vida!.add(i);
-    }
     Future.delayed(const Duration(seconds: 7), () {
       inputDeath.add(false);
     });

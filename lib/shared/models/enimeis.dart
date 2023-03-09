@@ -1,7 +1,7 @@
 import 'package:flutter_cube/flutter_cube.dart';
 
 class EnimiesModel {
-  List<int>? vida;
+  int? vida;
   Object? obj;
 
   EnimiesModel({

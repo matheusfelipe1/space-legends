@@ -100,11 +100,12 @@ class CombatBloC {
       return true;
     }).takeWhile((element) => true);
     periodcCanShot =
-        Stream<dynamic>.periodic(const Duration(seconds: 10), (count) => null).takeWhile((element) => true);
+        Stream<dynamic>.periodic(const Duration(seconds: 10), (count) => null)
+            .takeWhile((element) => true);
   }
 
   swithVal() {
-   canShoot = !canShoot;
+    canShoot = !canShoot;
   }
 
   _startShotsFromMe(X1Model x1Model) {
@@ -115,10 +116,11 @@ class CombatBloC {
           (Geolocator.distanceBetween(start.dx, start.dx, end.dx, end.dx) /
               100000);
       if (radius == 0.0) {
-        inputIHit.add(true);
+        canShoot = true;
         scores += Constants.score;
-        _enimiesBloC.inputHit.add(true);
       }
+      inputIHit.add(radius == 0.0);
+      _enimiesBloC.inputHit.add(radius == 0.0);
     }
   }
 

@@ -60,7 +60,7 @@ class EnimiesBloC {
   _hitInEnimies(bool data) async {
     // print(enimies.vida!.isEmpty);
     if (finishAudio.isCompleted) {
-      if (data) {
+      if (data == true) {
         if (enimies.vida == 0) {
           finishAudio = Completer();
           _soundEnimyDeath();

@@ -140,6 +140,14 @@ class SpaceShipBloC {
       _inputSpaceShipController.sink
           .add(SpaceShipRaiseShields(spaceShipModel: space));
     }
+    _soundShot();
+  }
+
+
+  _soundShot() {
+    final play = AudioPlayer();
+    play
+        .play(AssetSource('images/shot_by_enimy.mp3'));
   }
 
   raisedShield() {
@@ -178,7 +186,7 @@ class SpaceShipBloC {
   startShot() async {
     space.iShot = true;
     _inputSpaceShipController.sink.add(SpaceShipIShot(spaceShipModel: space));
-    HapticFeedback.vibrate();
+    HapticFeedback.heavyImpact();
     _showSound();
     inputIshot.add(true);
   }

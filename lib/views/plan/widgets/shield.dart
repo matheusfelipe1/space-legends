@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -55,26 +54,30 @@ class MyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..shader = RadialGradient(
+      ..shader = LinearGradient(
         colors: [
           Colors.transparent,
           Colors.blue.withOpacity(0.8),
+          Colors.transparent,
         ],
-      ).createShader(Rect.fromCircle(
-        center: const Offset(35, 35),
-        radius: 41,
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      ).createShader(Rect.fromPoints(
+        Offset(size.height * -1, size.width),
+        const Offset(200, 150)
       ));
-    canvas.drawArc(
-      Rect.fromCenter(
-        center: Offset(size.height / 2, size.width / 2),
-        height: size.height,
-        width: size.width,
-      ),
-      pi,
-      pi,
-      false,
-      paint,
-    );
+    canvas.drawRect(Offset(size.height * -1, size.width) & const Size(200, 150), paint);
+    // canvas.drawArc(
+    //   Rect.fromCenter(
+    //     center: Offset(size.height / 2, size.width / 2),
+    //     height: size.height,
+    //     width: size.width,
+    //   ),
+    //   pi,
+    //   pi,
+    //   false,
+    //   paint,
+    // );
   }
 
   @override

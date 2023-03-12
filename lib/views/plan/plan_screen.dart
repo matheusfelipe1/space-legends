@@ -32,11 +32,6 @@ class _PlaScreenState extends State<PlaScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       final audio = AudioPlayer();
       audio.play(AssetSource('images/epic.wav'));
@@ -66,6 +61,11 @@ class _PlaScreenState extends State<PlaScreen> {
       body: Stack(
         key: UniqueKey(),
         children: [
+          SizedBox(
+            height: size.height,
+            width: size.width,
+            child: Image.asset('assets/images/gif.gif', fit: BoxFit.fill),
+          ),
           const SpaceShip(),
           Positioned(
               top: size.width * .04,
@@ -74,7 +74,7 @@ class _PlaScreenState extends State<PlaScreen> {
                 key: UniqueKey(),
               )),
           const ShowEnimies(),
-          const Positioned(bottom: 0, left: 0, child: Scores()),
+          const Positioned(bottom: 15, left: 0, child: Scores()),
           Positioned(
               top: 0,
               right: 0,

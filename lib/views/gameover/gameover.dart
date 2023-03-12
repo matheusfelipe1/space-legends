@@ -34,7 +34,7 @@ class _GameOverScreenState extends State<GameOverScreen> {
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
                      const Color.fromARGB(255, 201, 56, 45))),
-              onPressed: () => Modular.to.pushReplacementNamed('/default/'),
+              onPressed: () => Modular.to.pushReplacementNamed('/game/'),
               child: const Text('Try again',
                   style: TextStyle(color: Colors.white, fontSize: 19)))
         ],

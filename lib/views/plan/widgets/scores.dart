@@ -19,27 +19,13 @@ class _ScoresState extends State<Scores> {
       key: UniqueKey(),
         stream: _blocCombat.outputIHit,
         builder: (context, snapshot) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Kills: ' + _blocCombat.kills.toString(),
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 25.2,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic),
-              ),
-             const  Divider(color: Colors.white, thickness: 30, height: 10),
-              Text(
-                'Scores: ' + _blocCombat.scores.toString(),
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 25.2,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic),
-              )
-            ],
+          return Text(
+            'Scores: ' + _blocCombat.scores.toString(),
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 25.2,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic),
           );
         }
       ),

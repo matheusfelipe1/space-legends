@@ -14,11 +14,18 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     Future.delayed(const Duration(seconds: 4),
-        () => Modular.to.pushReplacementNamed('/default/'));
+        () => Modular.to.pushReplacementNamed('/login/'));
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: SizedBox(
+        height: size.height,
+        width: size.width,
+        child: Image.asset('assets/images/f2.jpeg', fit: BoxFit.cover),
+      ),
+    );
   }
 }
